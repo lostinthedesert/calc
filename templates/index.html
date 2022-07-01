@@ -7,11 +7,11 @@
     <body>
         <h2>Dilution Calculator</h2>
             <label for="everclear">Grain alcohol ABV (not proof)</label><div></div>
-            <input type="text" id="everclear" autocomplete="off"><div></div><br>
+            <input type="number" id="everclear" autocomplete="off"><div></div><br>
             <label for="final">Desired ABV of final product (not proof)</label><div></div>
-            <input type="text" id="final" autocomplete="off"><div></div><br>
+            <input type="number" id="final" autocomplete="off"><div></div><br>
             <label for="volume">Total volume of final product (e.g. 64oz = 64)</label><div></div>
-            <input type="text" id="volume" autocomplete="off"><br><br>
+            <input type="number" id="volume" autocomplete="off"><br><br>
             <div><button type="submit" id="calculate">calculate</button></div>
             <div>Volume of grain alcohol needed (ounces/mL/etc.):<h2><p id="answer"></p></div></h2>
             <footer>Note: The unit of measure for "Total volume of final product" must match the unit of measure for "Volume of grain alcohol needed" (ounces for ounces, mL for mL, etc.)</footer>

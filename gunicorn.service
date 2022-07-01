@@ -1,0 +1,14 @@
+[Unit]
+Description=calculator for azpando.com homepage
+After=network.target
+
+[Service]
+User=cnickm
+Group=cnickm
+WorkingDirectory=/home/cnickm/app/src/
+Environment="PATH=/home/cnickm/app/venv/bin"
+EnvironmentFile=/home/cnickm/.env
+ExecStart=/home/cnickm/app/venv/bin/gunicorn -w 1 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:8000
+
+[Install]
+WantedBy=multi-user.target
