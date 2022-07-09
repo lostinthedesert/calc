@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+        <title>Welcome to Pando</title>
+    </head>
+    <body>
+        <h2>Dilution Calculator</h2>
+            <label for="everclear">Grain alcohol ABV (not proof)</label><div></div>
+            <input type="number" pattern="[0-9]*" inputmode="decimal" id="everclear" autocomplete="off"><div></div><br>
+            <label for="final">Desired ABV of final product (not proof)</label><div></div>
+            <input type="number" pattern="[0-9]*" inputmode="decimal" id="final" autocomplete="off"><div></div><br>
+            <label for="volume">Total volume of final product (e.g. 64oz = 64)</label><div></div>
+            <input type="number" pattern="[0-9]*" inputmode="decimal" id="volume" autocomplete="off"><br><br>
+            <div><button type="submit" id="calculate">calculate</button></div>
+            <div>Volume of grain alcohol needed (ounces/mL/etc.):<h2><p id="answer"></p></div></h2>
+            <footer>Note: The unit of measure for "Total volume of final product" must match the unit of measure for "Volume of grain alcohol needed" (ounces for ounces, mL for mL, etc.)</footer>
+        
+
+        <script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+        {% block javascript %}
+        <script type="text/javascript"> 
+        {% include "script.js" %} 
+        </script>
+        {% endblock %}
+    </body>
+</html>
