@@ -1,4 +1,3 @@
-from pydantic import EmailStr
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 
 from app.database import Base

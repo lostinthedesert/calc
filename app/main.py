@@ -10,6 +10,8 @@ import app.models as models, app.schemas as schemas
 
 from app.database import SessionLocal, engine, get_db
 
+from .config import settings
+
 models.Base.metadata.create_all(bind=engine)
 
 app=FastAPI()
