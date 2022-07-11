@@ -15,7 +15,7 @@
             <label for="volume">Total volume of final product (e.g. 64oz = 64)</label><div></div>
             <input type="number" pattern="[0-9]*" inputmode="decimal" id="volume" autocomplete="off"><br><br>
             <div><button type="submit" id="calculate">calculate</button></div>
-            <div>Volume of grain alcohol needed (ounces/mL/etc.):<h2><p id="answer"></p></div></h2>
+            <div>Volume of grain alcohol needed (ounces/mL/etc.):<h2><p id="answer"></p></h2></div>
             <footer>Note: The unit of measure for "Total volume of final product" must match the unit of measure for "Volume of grain alcohol needed" (ounces for ounces, mL for mL, etc.)</footer>
         
 
@@ -25,7 +25,7 @@
         crossorigin="anonymous"></script>
         {% block javascript %}
         <script type="text/javascript"> 
-        {% include "script.js" %} 
+        {% include "index.js" %} 
         </script>
         {% endblock %}
     </body>

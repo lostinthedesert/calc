@@ -4,12 +4,16 @@ $(document).ready(function() {
         const password = $("#password").val();
         const email = $("#email").val();
         const user = JSON.stringify({name:username, pword:password, mail:email});
-        console.log(user);
         $.ajax("/new_user", {
             type: 'post',
             contentType: 'application/json',
             data: user,
-            dataType: 'json'
+            dataType: 'text',
+            error: function (jqXhr, textStatus, errorMessage) {
+                $("#response").append("Error: " + errorMessage)},
+            success: function (data){
+                $("#response").append("Congratulations! New user " +data+" has been created.");
+            }
         });
     });
 });
