@@ -26,10 +26,6 @@ def calculator(request: Request):
 def create_form(request: Request):
     return templates.TemplateResponse("new_user.html", {"request": request})
 
-@app.get("/user_created/{id}")
-def create_form(request: Request, id: int):
-    return templates.TemplateResponse("user_created.html", {"request": request})
-
 
 @app.post("/new_user", status_code=status.HTTP_201_CREATED)
 def create_user(user: schemas.User, db: Session = Depends(get_db)):
