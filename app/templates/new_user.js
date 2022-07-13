@@ -11,10 +11,13 @@ $(document).ready(function() {
             data: user,
             dataType: 'text',
             error: function (jqXhr, textStatus, errorMessage) {
-                $("#response").append(errorMessage + " Make sure valid email address entered.")},
+                $("#response").append(errorMessage + "- Make sure valid email address entered")},
             success: function (data){
+                $("#username").val("");
+                $("#password").val("");
+                $("#email").val("");
                 $("#response").append("Congratulations! New user " +data+" has been created.");
             }
         });
-    });
+    });      
 });
