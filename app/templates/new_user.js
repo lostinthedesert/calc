@@ -1,6 +1,6 @@
 $(document).ready(function() {
-    $("#submit").click(function(){
-        $("#response").html("")
+    $("#user_form").submit(function(e){
+        e.preventDefault();
         const username = $("#username").val();
         const password = $("#password").val();
         const email = $("#email").val();
@@ -11,7 +11,7 @@ $(document).ready(function() {
             data: user,
             dataType: 'text',
             error: function (jqXhr, textStatus, errorMessage) {
-                $("#response").append(errorMessage +" - Make sure valid email address entered")},
+                $("#response").append(errorMessage)},
             success: function (data){
                 $("#user_form").remove()
                 $("#response").append("Congratulations! New user " +data+" has been created.");
