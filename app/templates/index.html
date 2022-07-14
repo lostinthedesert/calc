@@ -10,11 +10,11 @@
         <h2>Dilution Calculator</h2>
         <form id="form" autocomplete="off">
             <label for="everclear">Grain alcohol ABV (not proof)</label><div></div>
-            <input type="number" pattern="[0-9]*" inputmode="decimal" id="everclear" required><div></div><br>
+            <input type="number" step=".01" pattern="[0-9]*" inputmode="decimal" id="everclear" required><div></div><br>
             <label for="final">Desired ABV of final product (not proof)</label><div></div>
-            <input type="number" pattern="[0-9]*" inputmode="decimal" id="final" required><div></div><br>
+            <input type="number" step=".01" pattern="[0-9]*" inputmode="decimal" id="final" required><div></div><br>
             <label for="volume">Total volume of final product (e.g. 64oz = 64)</label><div></div>
-            <input type="number" pattern="[0-9]*" inputmode="decimal" id="volume" required><br><br>
+            <input type="number" step=".01" pattern="[0-9]*" inputmode="decimal" id="volume" required><br><br>
             <div><button type="submit" id="calculate">Calculate</button></div>
         </form>
             <div>Volume of grain alcohol needed (ounces/mL/etc.):
