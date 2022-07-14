@@ -1,5 +1,6 @@
 $(document).ready(function() {
-    $("#calculate").click(function(){
+    $("#form").submit(function(e){
+        e.preventDefault();
         var everclear = $("#everclear").val();
         var intEverclear = parseFloat(everclear);
         var final = $("#final").val();
@@ -7,7 +8,7 @@ $(document).ready(function() {
         var volume = $("#volume").val();
         var intVolume = parseFloat(volume);
         var answer = (intVolume * intFinal) / intEverclear;
-        $("#answer").html(answer)
+        $("#answer").html(answer);
     });
 
 });

@@ -8,14 +8,18 @@
     </head>
     <body>
         <h2>Dilution Calculator</h2>
+        <form id="form" autocomplete="off">
             <label for="everclear">Grain alcohol ABV (not proof)</label><div></div>
-            <input type="number" pattern="[0-9]*" inputmode="decimal" id="everclear" autocomplete="off" required><div></div><br>
+            <input type="number" pattern="[0-9]*" inputmode="decimal" id="everclear" required><div></div><br>
             <label for="final">Desired ABV of final product (not proof)</label><div></div>
-            <input type="number" pattern="[0-9]*" inputmode="decimal" id="final" autocomplete="off"><div></div><br>
+            <input type="number" pattern="[0-9]*" inputmode="decimal" id="final" required><div></div><br>
             <label for="volume">Total volume of final product (e.g. 64oz = 64)</label><div></div>
-            <input type="number" pattern="[0-9]*" inputmode="decimal" id="volume" autocomplete="off"><br><br>
-            <div><button type="submit" id="calculate">calculate</button></div>
-            <div>Volume of grain alcohol needed (ounces/mL/etc.):<h2><p id="answer"></p></h2></div>
+            <input type="number" pattern="[0-9]*" inputmode="decimal" id="volume" required><br><br>
+            <div><button type="submit" id="calculate">Calculate</button></div>
+        </form>
+            <div>Volume of grain alcohol needed (ounces/mL/etc.):
+            <h2><p id="answer"></p></h2>
+            </div>
             <footer>Note: The unit of measure for "Total volume of final product" must match the unit of measure for "Volume of grain alcohol needed" (ounces for ounces, mL for mL, etc.)</footer>
         
 
