@@ -10,11 +10,13 @@ $(document).ready(function() {
             contentType: 'application/json',
             data: user,
             dataType: 'text',
-            error: function (jqXhr, textStatus, errorMessage) {
-                $("#response").append(errorMessage)},
+            error: function (xhr, textStatus, errorMessage) {
+                if(xhr.status==406){
+                    $("#response").html("That username already exists")}
+                },
             success: function (data){
                 $("#user_form").remove()
-                $("#response").append("Congratulations! New user " +data+" has been created.");
+                $("#response").html("Congratulations! New user " +data+" has been created.");
             }
         });
     });      
