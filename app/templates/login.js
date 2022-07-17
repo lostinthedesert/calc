@@ -3,10 +3,9 @@ $(document).ready(function(){
         e.preventDefault();
         const username=$("#username").val();
         const password=$("#password").val();
-        const user=JSON.stringify({"name":username, "pword":password})
-        $.ajax("/user_login", {
+        const user={"username":username, "password":password};
+        $.ajax("/login", {
             type: 'post',
-            contentType: 'application/json',
             data: user,
             dataType: 'text',
             error: function (xhr, textStatus, errorMessage) {

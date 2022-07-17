@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, CheckConstraint, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, CheckConstraint, Column, ForeignKey, Integer, String, collate
 
 from app.database import Base
 
