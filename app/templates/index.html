@@ -8,11 +8,11 @@
     </head>
     <body>
         <header>
-            <a href="/new_user">Sign up</a> | <a href="/login">Login</a>
+            <a id="sign_up" href="">Sign up</a> | <a id="login" href="">Login</a>
         </header> 
         <h2>Dilution Calculator</h2>
         <form id="form" autocomplete="off">
-            <label for="everclear">Grain alcohol ABV (not proof)</label><div></div>
+            <label for="everclear">Alcohol by Volume (ABV) of grain alcohol (not proof)</label><div></div>
             <input type="number" step=".01" pattern="[0-9]*" inputmode="decimal" id="everclear" required><div></div><br>
             <label for="final">Desired ABV of final product (not proof)</label><div></div>
             <input type="number" step=".01" pattern="[0-9]*" inputmode="decimal" id="final" required><div></div><br>

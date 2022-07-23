@@ -7,11 +7,12 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
         crossorigin="anonymous"></script>
-        <title>Welcome to Pando</title>
+        <title>Pando Login</title>
     </head>
     <body>
+    <div id="login">
     <header>
-        <a href="/new_user">Sign up</a> | <a href="/">Home</a>
+        <a id="sign_up" href="">Sign up</a> | <a id="home" href="">Home</a> | <a id="new_post" href="">New Post</a>
     </header> 
     <h1>User Login</h1>
     <form autocomplete="off" id="login_form">
@@ -21,8 +22,9 @@
         <input type="password" id="password" required><br>
         <button type="submit">Login</button>
     </form>
+    </div>
     <p id="response"></p>
-
+    
     {% block javascript %}
     <script type="text/javascript">
     {% include "login.js" %}</script>

@@ -10,5 +10,22 @@ $(document).ready(function() {
         var answer = (intVolume * intFinal) / intEverclear;
         $("#answer").html(answer);
     });
-
+    $("#login").click(function(e){
+        e.preventDefault();
+        $.ajax("/login",{
+            type: 'GET',
+            success: function(data){
+                $("body").html(data);
+            }
+        });
+    });
+    $("#sign_up").click(function(e){
+        e.preventDefault();
+        $.ajax("/new_user",{
+            type: 'GET',
+            success: function(data){
+                $("body").html(data);
+            }
+        })
+    })
 });

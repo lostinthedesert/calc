@@ -1,3 +1,4 @@
+from cgitb import html
 from fastapi import Depends, FastAPI, Request, status, HTTPException, Response
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import Response
@@ -54,12 +55,18 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 def user_login(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
-@app.post("/login")
+@app.post("/login", response_model=schemas.Token)
 def user_login(credentials:OAuth2PasswordRequestForm=Depends(), db: Session=Depends(get_db)):
     user=db.query(models.Users).filter(func.lower(models.Users.name)==func.lower(credentials.username)).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     if not verify(credentials.password, user.pword):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
-    print(credentials.username)
-    return "here's your token"
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    access_token=oauth2.create_access_token(data={"user_id":user.id})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@app.get("/create_post")
+def create_post(request:Request, current_user: int=Depends(oauth2.get_current_user), db: Session=Depends(get_db)):
+    name=db.query(models.Users).filter(models.Users.name==current_user.name).first()
+    print(name.name)
+    return templates.TemplateResponse("create_post.html", {"request": request, "name":name.name})

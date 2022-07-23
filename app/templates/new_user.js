@@ -19,5 +19,23 @@ $(document).ready(function() {
                 $("#response").html("Congratulations! New user " +data+" has been created.");
             }
         });
+    });
+    $("#login").click(function(e){
+        e.preventDefault();
+        $.ajax("/login", {
+            type: 'GET',
+            success: function(data){
+                $("body").html(data);
+            }
+        });
+    });
+    $("#home").click(function(e){
+        e.preventDefault();
+        $.ajax("/", {
+            type: 'GET',
+            success: function(data){
+                $("body").html(data);
+            }
+        })
     });      
 });
