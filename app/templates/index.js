@@ -1,12 +1,13 @@
 $(document).ready(function() {
+//HEADER BEHAVIOR
     try{
         $.ajax("/create_post",{
             type: 'GET',
             headers: {"Authorization": "Bearer "+ localStorage.getItem("token")},
             error: function(){
-                $("#user_name").remove()
+                $(".extra_nav").remove()
             }});
-        $("#user_name").html(` | User: <b>${localStorage.getItem("user_name")}</b> logged in (<a id="logout" href="">logout</a>)`)
+        $(".extra_nav").html(`| <a id="new_post" href="">New Post</a> | <a id="newsfeed" href="">Feed</a> | User: <b>${localStorage.getItem("user_name")}</b> logged in (<a id="logout" href="">logout</a>)`);
     }
     catch(err){
     };
@@ -54,7 +55,20 @@ $(document).ready(function() {
                 }},
             success: function(data){
                 $("body").html(data);
-            }})})
+            }})});
+    $("#newsfeed").click(function(e){
+        e.preventDefault();
+        var item=localStorage.getItem("token");
+        $.ajax("/get_post", {
+            type: 'GET',
+            headers: {"Authorization": "Bearer " + item},
+            error: function (xhr, textStatus, errorMessage) {
+                if(xhr.status==401){
+                    $("#response").html("User not authenticated. Please login ");
+                    $("#div2").remove()}
+                },
+            success: function(data){
+                $("body").html(data);}})});
     $("#logout").click(function(e){
         e.preventDefault();
         localStorage.removeItem("token");

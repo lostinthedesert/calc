@@ -1,8 +1,9 @@
 $(document).ready(function(){
     // HEADER BEHAVIOR
-    $("#user_name").html(` | User: <b>${localStorage.getItem("user_name")}</b> logged in (<a id="logout" href="">logout</a>)`)
+    $(".extra_nav").html(`| <a id="new_post" href="">New Post</a> | <a id="newsfeed" href="">Feed</a> | User: <b>${localStorage.getItem("user_name")}</b> logged in (<a id="logout" href="">logout</a>)`);
     $("#logout").click(function(e){
         e.preventDefault();
+        localStorage.removeItem("query_limit");
         localStorage.removeItem("token");
         localStorage.removeItem("user_name");
         $.ajax("/login",{
@@ -18,6 +19,7 @@ $(document).ready(function(){
                 $("body").html(data);}})});
     $("#new_post").click(function(e){
         e.preventDefault();
+        localStorage.removeItem("query_limit");
         var item=localStorage.getItem("token");
         $.ajax("/create_post", {
             type: 'GET',
@@ -31,6 +33,7 @@ $(document).ready(function(){
                 $("body").html(data);}})});
     $("#newsfeed").click(function(e){
         e.preventDefault();
+        localStorage.removeItem("query_limit");
         var item=localStorage.getItem("token");
         $.ajax("/get_post", {
             type: 'GET',
@@ -44,6 +47,7 @@ $(document).ready(function(){
                 $("body").html(data);}})});
     $("#refresh").click(function(e){
         e.preventDefault();
+        localStorage.removeItem("query_limit");
         var item=localStorage.getItem("token");
         $.ajax("/get_post", {
             type: 'GET',

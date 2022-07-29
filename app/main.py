@@ -68,7 +68,7 @@ def user_login(credentials:OAuth2PasswordRequestForm=Depends(), db: Session=Depe
 
 @app.get("/get_post")
 def create_post(request:Request, current_user: int=Depends(oauth2.get_current_user), db: Session=Depends(get_db), limit: int=10):
-    all_posts=db.query(models.Posts).limit(limit).all()
+    all_posts=db.query(models.Posts).order_by(models.Posts.created_at.desc()).limit(limit).all()
     list=[]
     for post in all_posts:
         list.append([post.title, post.content, str(post.created_at)])
