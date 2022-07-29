@@ -1,5 +1,5 @@
 $(document).ready(function(){
-// HEADER BEHAVIOR
+    // HEADER BEHAVIOR
     $("#user_name").html(` | User: <b>${localStorage.getItem("user_name")}</b> logged in (<a id="logout" href="">logout</a>)`)
     $("#logout").click(function(e){
         e.preventDefault();
@@ -38,14 +38,14 @@ $(document).ready(function(){
             error: function (xhr, textStatus, errorMessage) {
                 if(xhr.status==401){
                     $("#response").html("User not authenticated. Please login ");
-                    $("#div2").remove()}
+                    $("#keep_header").remove()}
                 },
             success: function(data){
                 $("body").html(data);}})});
     $("#refresh").click(function(e){
         e.preventDefault();
         var item=localStorage.getItem("token");
-        $.ajax("/create_post", {
+        $.ajax("/get_post", {
             type: 'GET',
             headers: {"Authorization": "Bearer " + item},
             error: function (xhr, textStatus, errorMessage) {
@@ -55,23 +55,22 @@ $(document).ready(function(){
             success: function(data){
                 $("body").html(data);
             }})});
-// FORM SUBMISSION BEHAVIOR
-    $("#post_form").submit(function(e){
+    if (localStorage.getItem("query_limit")==null){
+        var result=20;}
+    else {
+        var result=localStorage.getItem("query_limit");
+        result=parseInt(result)
+    };
+    $("#next_ten").click(function(e){
         e.preventDefault();
-        const TITLE=$("#title").val();
-        const CONTENT=$("#content").val();
-        post=JSON.stringify({"title":TITLE, "content": CONTENT});
-        $.ajax("/create_post",{
-            type: 'POST',
-            contentType:'application/json',
+        $.ajax("/get_post?limit="+ result,{
+            type: 'GET',
             headers: {"Authorization": "Bearer " + localStorage.getItem("token")},
-            data: post,
-            error: function(xhr){
-                if(xhr.status==401){
-                    $("#post_form").remove();
-                    $("#keep_header").html("Please login to create new post");
-                }},
             success: function(data){
-                $("#post_form").remove();
-                $("#keep_header").html(data);
-            }});});});
+                $("body").html(data);
+                result += 10;
+                localStorage.setItem("query_limit", result)
+            }
+        })
+    })   
+})

@@ -12,17 +12,29 @@
     <title>Create post</title>
 </head>
 <body>
+<div id="full_body">
 <header>
-    <a href="">Log out</a> | <a href="/">Home</a>
+    <a id="sign_up" href="">Sign up</a> | <a id="home" href="">Home</a> | <a id="new_post" href="">New Post</a> | <a id="newsfeed" href="">Feed</a> | </a> <a id="refresh" href="">Refresh</a> <a id="user_name"></a>
 </header> 
-<h2>Hello, {{name}}. You are now logged in, click <button id="proceed">here</button> to be directed to the authorized users page.</h2>
+<div id="keep_header">
+<br>
+<h2>Create a new post</h2><br>
+<form id="post_form" autocomplete="off">
+    <label for="title">Title</label><br>
+    <input type="text" id="title" required><br>
+    <label for="content">Content</label><br>
+    <textarea type="textarea" id="content" rows="10" cols="40" required></textarea><br>
+    <button type="submit">Post</button>
+</form>
+
+
 
 {% block javascript %}
 <script type="text/javascript"> 
 {% include "create_post.js" %} 
 </script>
 {% endblock %}
-
-
+</div>
+</div>
 </body>
 </html>
