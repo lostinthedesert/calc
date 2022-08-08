@@ -1,5 +1,6 @@
 $(document).ready(function(){
     // HEADER BEHAVIOR
+    // history.pushState(null, null, '/get_post');
     $(".extra_nav").html(`| <a id="new_post" href="">New Post</a> | <a id="newsfeed" href="">Feed</a> | User: <b>${localStorage.getItem("user_name")}</b> logged in (<a id="logout" href="">logout</a>)`);
     $("#logout").click(function(e){
         e.preventDefault();
@@ -65,6 +66,7 @@ $(document).ready(function(){
         var result=localStorage.getItem("query_limit");
         result=parseInt(result)
     };
+//QUERY PARAMETER FOR ALL POSTS
     $("#next_ten").click(function(e){
         e.preventDefault();
         $.ajax("/get_post?limit="+ result,{

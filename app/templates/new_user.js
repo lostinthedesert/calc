@@ -11,27 +11,40 @@ $(document).ready(function() {
     }
     catch(err){
     };
+    // history.pushState(null, null, '/new_user');
     $("#user_form").submit(function(e){
         e.preventDefault();
-        const username = $("#username").val();
-        const password = $("#password").val();
-        const email = $("#email").val();
-        const user = JSON.stringify({name:username, pword:password, mail:email});
-        $.ajax("/new_user", {
-            type: 'post',
-            contentType: 'application/json',
-            data: user,
-            dataType: 'text',
-            error: function (xhr, textStatus, errorMessage) {
-                if(xhr.status==406){
-                    $("#response").html("That username already exists")}
-                },
-            success: function (data){
-                $("#user_form").remove()
-                $("#response").html("Congratulations! New user " +data+" has been created.");
+        const username = $("#username").val().trim();
+        const password = $("#password").val().trim();
+        const email = $("#email").val().trim();
+        function lengthOk(string){
+            if(string.length>2 && string.length<21){
+                return true
             }
-        });
+            throw "username must be 3-20 characters long";
+        };
+        try{
+            lengthOk(username);
+            const user = JSON.stringify({name:username, pword:password, mail:email});
+            $.ajax("/new_user", {
+                type: 'post',
+                contentType: 'application/json',
+                data: user,
+                dataType: 'text',
+                error: function (xhr, textStatus, errorMessage) {
+                    if(xhr.status==406){
+                        $("#response").html("That username already exists")}
+                    },
+                success: function (data){
+                    $("#user_form").remove()
+                    $("#response").html("Congratulations! New user " +data+" has been created.");
+                }
+            });}
+        catch(err){
+            $("#response").html(err);
+            };
     });
+// HEADER BEHAVIOR
     $("#login").click(function(e){
         e.preventDefault();
         $.ajax("/login",{

@@ -18,8 +18,6 @@ from .utils import hash, verify
 
 from . import oauth2
 
-from typing import List
-
 models.Base.metadata.create_all(bind=engine)
 
 app=FastAPI()
@@ -66,6 +64,7 @@ def user_login(credentials:OAuth2PasswordRequestForm=Depends(), db: Session=Depe
     access_token=oauth2.create_access_token(data={"user_id":user.id})
     return {"access_token": access_token, "token_type": "bearer", "name": user.name}
 
+# VIEW POSTS
 @app.get("/get_post")
 def create_post(request:Request, current_user: int=Depends(oauth2.get_current_user), db: Session=Depends(get_db), limit: int=10):
     all_posts=db.query(models.Posts).order_by(models.Posts.created_at.desc()).limit(limit).all()
@@ -75,8 +74,7 @@ def create_post(request:Request, current_user: int=Depends(oauth2.get_current_us
     # print(list)
     return templates.TemplateResponse("get_post.html", {"request": request, "posts": list})
 
-
-
+# CREATE POSTS
 @app.get("/create_post")
 def create_post(request:Request, current_user: int=Depends(oauth2.get_current_user), db: Session=Depends(get_db)):
     name=db.query(models.Users).filter(models.Users.name==current_user.name).first()
