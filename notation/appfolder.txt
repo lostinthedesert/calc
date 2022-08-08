@@ -1,3 +1,0 @@
-this will explain creating an app folder as a sub directory to our project folder (calc).
-
-when we create the 'app' directory we must create a file '__init__.py' in that directory.

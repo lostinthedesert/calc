@@ -1,1 +1,0 @@
-psycopg2 is a postgresql driver required by sqlalchemy. it can be pip installed
