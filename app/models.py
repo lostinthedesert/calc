@@ -18,3 +18,11 @@ class Posts(Base):
     title= Column(String, nullable=False)
     content= Column(String, nullable=False)
     created_at=Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+
+class Customers(Base):
+    __tablename__="customers"
+    id= Column(Integer, primary_key=True)
+    first_name= Column(String, nullable=False)
+    last_name= Column(String, nullable=False)
+    phone= Column(String, nullable=False)
+    email=Column(String, nullable=False)

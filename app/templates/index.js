@@ -77,4 +77,15 @@ $(document).ready(function() {
             type: 'GET',
             success: function(data){
                 $("body").html(data)},
-            })});});
+            })});
+    $("#customers").click(function(e){
+        e.preventDefault();
+        $.ajax("/customers",{
+            type: 'GET',
+            success: function(data){
+                window.location.href='/customers';
+                $("body").html(data);
+            }
+        })
+    })
+});

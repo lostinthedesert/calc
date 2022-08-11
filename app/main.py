@@ -1,5 +1,6 @@
 from fastapi import Depends, FastAPI, Request, status, HTTPException, Response
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import Response
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -18,11 +19,18 @@ from .utils import hash, verify
 
 from . import oauth2
 
+from .routers import customers
+
 models.Base.metadata.create_all(bind=engine)
 
 app=FastAPI()
 
+app.include_router(customers.router)
+
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
+
+
 
 # HOME
 @app.get("/")
