@@ -83,7 +83,6 @@ $(document).ready(function() {
         $.ajax("/customers",{
             type: 'GET',
             success: function(data){
-                window.location.href='/customers';
                 $("body").html(data);
             }
         })
