@@ -23,11 +23,11 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 # CREATE CUSTOMER IN DB
-@router.get("/")
+@router.get("")
 def new_customer(request: Request):
     return templates.TemplateResponse("index2.html", {"request": request})
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("", status_code=status.HTTP_201_CREATED)
 def create_customer(customer: schemas.CreateCustomer, db: Session = Depends(get_db)):
     new_customer=models.Customers(**customer.dict())
     db.add(new_customer)
