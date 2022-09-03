@@ -1,2 +1,5 @@
 notation/
 .env
+app/routers/
+app/oauth2.py
+app/utils.py

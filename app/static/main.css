@@ -1,0 +1,19 @@
+.calculator{
+    display: none;
+}
+
+.calculator.selected{
+    display: block;
+}
+
+.posts{
+    display: none;
+}
+
+.posts.selected{
+    display: block;
+}
+
+.hidden{
+    display: none;
+}

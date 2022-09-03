@@ -1,0 +1,46 @@
+.calculator.selected{
+    display: block;
+}
+
+.signup-page.selected{
+    display: block;
+}
+
+.login-page.selected{
+    display: block;
+}
+
+.signup-page{
+    display: none;
+}
+
+.login-page{
+    display: none;
+}
+#find_customer_div{
+    display: none;
+}
+
+#add_customer_div{
+    display: block;
+}
+
+.login-page{
+    display: none;
+}
+
+.calculator{
+    display: none;
+}
+
+.signup-page{
+    display: none;
+}
+
+#login-form{
+    display: block;
+}
+
+.server-response{
+    display: none;
+}

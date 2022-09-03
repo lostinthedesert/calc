@@ -14,10 +14,11 @@
     </head>
     <body>
         <header>
-            <a id="homeLink" data-id="calculator" href="">Home</a> | <a id="postsLink" data-id="posts" href="">Post Something</a>
+            <a id="signupLink" data-id="signup-page" href="">Sign up</a> | <a id="loginLink" data-id="login-page" href="">Login</a> | <a id="homeLink" data-id="calculator" href="">Home</a> | <a id="refresh" href="">Refresh</a> <a class="extra_nav"></a>
         </header>
         
-        <div class="calculator selected">
+        <p id="no_user"></p> 
+        <div class="calculator all-pages selected">
         <h2>Dilution Calculator</h2>
         <form id="form" data-id="calculatorForm" autocomplete="off">
             <label for="everclear">Alcohol by Volume (ABV) of grain alcohol (not proof)</label><div></div>
@@ -34,16 +35,35 @@
             <footer>Note: The unit of measure for "Total volume of final product" must match the unit of measure for "Volume of grain alcohol needed" (ounces for ounces, mL for mL, etc.)</footer>
         </div>
 
-        <div class="posts">
-            <h2>All posts</h2>
-            <span class="one-post"></span>
-            <br>
-            <span id="previous-tenLink" data-id="posts" data-class="previous-ten"></span><span id="next-tenLink" data-id="posts" data-class="next-ten"></span>
+        <div class="signup-page all-pages">
+            <h2>Create new user</h2>
+            <form autocomplete="off" id="user_form" data-id="signupForm">
+                <label for="username">Username: </label><br>
+                <input type="text", id="signup-username" required><br>
+                <label for="password">Password: </label><br>
+                <input type="password", id="signup-password" required><br>
+                <label for="email">Email: </label><br>
+                <input type="email", id="signup-email" required><br>
+                <button type="submit" id="submit">Submit</button>
+            </form>
         </div>
-   
+
+        <div class="login-page all-pages">
+            <h1>User Login</h1>
+            <form autocomplete="off" id="login-form" data-id="loginForm">
+                <label for="username">Username</label><br>
+                <input type="text" id="username" required><br>
+                <label for="password">Password</label><br>
+                <input type="password" id="password" required><br>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+
+        <div class="server-response all-pages"></div>
+    
         <script src="/static/index.js"></script>  
 
-    </body>
+        </body>
 
     
 </html>
