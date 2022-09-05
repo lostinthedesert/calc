@@ -45,6 +45,7 @@ def create_post(post: schemas.CreatePost, db: Session=Depends(get_db)):
     db.commit()
     db.refresh(new_post)
     new_post=db.query(models.Posts).filter(models.Posts.id==new_post.id).first()
+    print(new_post.content)
     return {"title": new_post.title,
             "content": new_post.content,
             "created": new_post.created_at}
@@ -56,7 +57,7 @@ def create_post(db: Session=Depends(get_db), limit: int=10, skip: int=0):
     list=[]
     for post in all_posts:
         list.append([post.title, post.content, str(post.created_at)])
-    print(list)
+    print(list[0][1])
     return {"posts": list}
 
 # CREATE USER

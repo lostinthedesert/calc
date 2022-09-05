@@ -17,3 +17,22 @@
 .hidden{
     display: none;
 }
+
+#content {
+    font-family: 'Times New Roman', Times, serif;
+    resize: none;
+    white-space: pre;
+}
+
+.one-post{
+    font-family: 'Times New Roman', Times, serif;
+}
+
+#border{
+    border-bottom-style: solid;
+    border-color: black;
+}
+
+.line.bold{
+    font-weight: bold;
+}

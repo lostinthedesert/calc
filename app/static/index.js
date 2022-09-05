@@ -6,9 +6,15 @@ function getPosts(skip){
         success: function(data){
             const posts=data.posts;
             for(var i=0; i<posts.length; i++){
-                $(".one-post").append("<br>");
+                $(".one-post").append("<div id='border'></div><br>");
                 for(var j=0; j<posts[i].length; j++){
-                    $(".one-post").append(posts[i][j] + "<br>");
+                    $(".one-post").append(`<div class='line'>${posts[i][j]}</div><br>`);
+                    if(j!=0){
+                        $(".line").removeClass("bold");
+                    }
+                    if(j===0){
+                        $(".line").addClass("bold");
+                    }
                 }};
             $("#next-tenLink").html("<a href='' id='next-ten'>Next 10 posts</a>");
             $("#previous-tenLink").html("<a href='' id='previous-ten'>Previous 10 posts</a> | ")
@@ -33,6 +39,12 @@ function handleClickEvent(e){
         $("#next-tenLink").removeClass("hidden");
     }
 
+    if($(this).data("class")=="postLink"){
+        $("#form").trigger("reset");
+        $("#answer").html("");
+        skip=0;
+    }
+
     if(newClass=="posts"){
         $(".one-post").html("")
         getPosts(skip);
@@ -44,7 +56,6 @@ function wireUpClickEvents(){
     $("#postsLink").click(handleClickEvent);
     $("#next-tenLink").click(handleClickEvent);
     $("#previous-tenLink").click(handleClickEvent);
-    
 }
 
 $(document).ready(function() {
@@ -65,3 +76,19 @@ $(document).ready(function() {
     });})
 
 // POSTS
+    $("#post-form").submit(function(e){
+        e.preventDefault();
+        const TITLE=$("#title").val();
+        const CONTENT=$("#content").val();
+        post=JSON.stringify({"title":TITLE, "content": CONTENT});
+        $.ajax("/create_post",{
+            type: 'POST',
+            contentType:'application/json',
+            data: post,
+            success: function(){
+                $("#post-form").trigger("reset");
+                $(".one-post").html("")
+                getPosts(0);
+
+                
+            }});})

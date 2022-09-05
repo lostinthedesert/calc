@@ -14,7 +14,7 @@
     </head>
     <body>
         <header>
-            <a id="homeLink" data-id="calculator" href="">Home</a> | <a id="postsLink" data-id="posts" href="">Post Something</a>
+            <a id="homeLink" data-id="calculator" href="">Home</a> | <a id="postsLink" data-id="posts" data-class="postLink" href="">Post Something</a>
         </header>
         
         <div class="calculator selected">
@@ -36,7 +36,16 @@
 
         <div class="posts">
             <h2>All posts</h2>
-            <span class="one-post"></span>
+            <div id="create-post">
+                <form id="post-form" autocomplete="off">
+                    <label for="title">Title</label><br>
+                    <input type="text" id="title" required><br>
+                    <label for="content">Content</label><br>
+                    <textarea type="textarea" id="content" rows="10" cols="40" required></textarea><br>
+                    <button type="submit">Post</button>
+                </form>
+            </div>
+            <pre><span class="one-post"></span></pre>
             <br>
             <span id="previous-tenLink" data-id="posts" data-class="previous-ten"></span><span id="next-tenLink" data-id="posts" data-class="next-ten"></span>
         </div>
