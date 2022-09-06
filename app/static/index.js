@@ -6,14 +6,16 @@ function getPosts(skip){
         success: function(data){
             const posts=data.posts;
             for(var i=0; i<posts.length; i++){
-                $(".one-post").append("<div id='border'></div><br>");
+                $(".one-post").append("<div id='border'></div>");
                 for(var j=0; j<posts[i].length; j++){
-                    $(".one-post").append(`<div class='line'>${posts[i][j]}</div><br>`);
-                    if(j!=0){
-                        $(".line").removeClass("bold");
+                    if(j==0){
+                        $(".one-post").append(`<div class='title'>${posts[i][j]}</div><br>`);
                     }
-                    if(j===0){
-                        $(".line").addClass("bold");
+                    if(j==1){
+                        $(".one-post").append(`<div class='content'>${posts[i][j]}</div><br>`);
+                    }
+                    if(j==2){
+                        $(".one-post").append(`<div class='date'>${posts[i][j]}</div><span id='single-postLink' data-id='single-post'><a href=''>Comment</a></span><br>`);
                     }
                 }};
             $("#next-tenLink").html("<a href='' id='next-ten'>Next 10 posts</a>");
@@ -56,6 +58,7 @@ function wireUpClickEvents(){
     $("#postsLink").click(handleClickEvent);
     $("#next-tenLink").click(handleClickEvent);
     $("#previous-tenLink").click(handleClickEvent);
+    $('#single-postLink').click(handleClickEvent);
 }
 
 $(document).ready(function() {
@@ -78,8 +81,8 @@ $(document).ready(function() {
 // POSTS
     $("#post-form").submit(function(e){
         e.preventDefault();
-        const TITLE=$("#title").val();
-        const CONTENT=$("#content").val();
+        const TITLE=$("#title").val().trim();
+        const CONTENT=$("#content").val().trim();
         post=JSON.stringify({"title":TITLE, "content": CONTENT});
         $.ajax("/create_post",{
             type: 'POST',

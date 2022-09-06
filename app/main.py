@@ -50,6 +50,19 @@ def create_post(post: schemas.CreatePost, db: Session=Depends(get_db)):
             "content": new_post.content,
             "created": new_post.created_at}
 
+# CREATE COMMENT
+@app.post("/create_comment")
+def create_comment(comment: schemas.CreateComment, db: Session=Depends(get_db)):
+    new_comment=models.Posts(**comment.dict())
+    db.add(new_comment)
+    db.commit()
+    db.refresh(new_comment)
+    new_comment=db.query(models.Posts).filter(models.Posts.id==new_comment.id).first()
+    print(new_comment.content)
+    return {"title": new_comment.title,
+            "content": new_comment.content,
+            "created": new_comment.created_at}
+
 # GET POST
 @app.get("/get_post")
 def create_post(db: Session=Depends(get_db), limit: int=10, skip: int=0):

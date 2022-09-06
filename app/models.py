@@ -15,7 +15,7 @@ from app.database import Base
 class Posts(Base):
     __tablename__="posts"
     id= Column(Integer, primary_key=True)
-    title= Column(String, nullable=False)
+    title= Column(String, default="COMMENT", nullable=False)
     content= Column(String, nullable=False)
     created_at=Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 

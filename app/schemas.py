@@ -18,6 +18,9 @@ class CreatePost(BaseModel):
 class ReturnPost(CreatePost):
     created_at: datetime
 
+class CreateComment(BaseModel):
+    content: str
+
 # class Token(BaseModel):
 #     access_token: str
 #     token_type: str

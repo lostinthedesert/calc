@@ -14,6 +14,14 @@
     display: block;
 }
 
+.single-post{
+    display: none;
+}
+
+.single-post.selected{
+    display: block;
+}
+
 .hidden{
     display: none;
 }
@@ -21,7 +29,7 @@
 #content {
     font-family: 'Times New Roman', Times, serif;
     resize: none;
-    white-space: pre;
+    white-space: pre-wrap;
 }
 
 .one-post{
@@ -31,8 +39,14 @@
 #border{
     border-bottom-style: solid;
     border-color: black;
+    border-width: 1px;
 }
 
-.line.bold{
+.title{
     font-weight: bold;
+}
+
+.date{
+    font-size: 14px;
+    font-
 }
