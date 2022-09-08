@@ -4,27 +4,36 @@ function getPosts(skip){
     $.ajax("/get_post?skip="+skip,{
         type: 'GET',
         success: function(data){
-            const posts=data.posts;
+            const posts=data;
             for(var i=0; i<posts.length; i++){
-                $(".one-post").append("<div id='border'></div>");
-                for(var j=0; j<posts[i].length; j++){
-                    if(j==0){
-                        $(".one-post").append(`<div class='title'>${posts[i][j]}</div><br>`);
-                    }
-                    if(j==1){
-                        $(".one-post").append(`<div class='content'>${posts[i][j]}</div><br>`);
-                    }
-                    if(j==2){
-                        $(".one-post").append(`<div class='date'>${posts[i][j]}</div><span id='single-postLink' data-id='single-post'><a href=''>Comment</a></span><br>`);
-                    }
-                }};
+                $(".ten-posts").append(`<div class='border' id='border${i}'></div>`);
+                $(`#border${i}`).append(`<div class='title'>${posts[i].title}</div><br>`);
+                $(`#border${i}`).append(`<div class='content'>${posts[i].content}</div><br>`);
+                $(`#border${i}`).append(`<div class='date'>${posts[i].created_at}</div><br>`);
+                $(`#border${i}`).append(`<div class='single-postLink' data-id='single-post' data-class=${posts[i].id}><a href=''>Comment</a></div><br>`)};
             $("#next-tenLink").html("<a href='' id='next-ten'>Next 10 posts</a>");
             $("#previous-tenLink").html("<a href='' id='previous-ten'>Previous 10 posts</a> | ")
             if(skip==0){
                 $("#previous-tenLink").addClass("hidden");}
             if(posts.length<10){
-                $("#next-tenLink").addClass("hidden");}}})};
-            
+                $("#next-tenLink").addClass("hidden");}
+            if(posts[9].id==1){
+                $("#next-tenLink").addClass("hidden");}
+            $(".single-postLink").click(handleClickEvent);
+        }})};
+
+function getSingle(id){
+    $.ajax("/get_single/"+id,{
+        type: 'GET',
+        success: function(data){
+            const post=data;
+            $(".single-post").append(`<div class='title'>${post.title}</div><br>`)
+            $(".single-post").append(`<div class='content'>${post.content}</div><br>`)
+            $(".single-post").append(`<div class='date'>${post.created_at}</div><br>`)
+        }
+    })
+};
+                
 function handleClickEvent(e){
     e.preventDefault();
     $(".selected").removeClass("selected");
@@ -44,12 +53,19 @@ function handleClickEvent(e){
     if($(this).data("class")=="postLink"){
         $("#form").trigger("reset");
         $("#answer").html("");
+        $(".hidden").removeClass("hidden");
         skip=0;
     }
 
     if(newClass=="posts"){
-        $(".one-post").html("")
+        $(".ten-posts").html("");
         getPosts(skip);
+    }
+
+    if(newClass=="single-post"){
+        $(".single-post").html("");
+        const id=$(this).data("class");
+        getSingle(id);
     }
 }
 
@@ -58,7 +74,6 @@ function wireUpClickEvents(){
     $("#postsLink").click(handleClickEvent);
     $("#next-tenLink").click(handleClickEvent);
     $("#previous-tenLink").click(handleClickEvent);
-    $('#single-postLink').click(handleClickEvent);
 }
 
 $(document).ready(function() {

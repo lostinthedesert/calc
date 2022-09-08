@@ -17,6 +17,7 @@ class Posts(Base):
     id= Column(Integer, primary_key=True)
     title= Column(String, default="COMMENT", nullable=False)
     content= Column(String, nullable=False)
+    comment_id= Column(Integer, nullable=True)
     created_at=Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
 # class Customers(Base):

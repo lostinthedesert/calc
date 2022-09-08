@@ -28,8 +28,9 @@
             <input type="number" step=".01" pattern="[0-9]*" inputmode="decimal" id="volume" required><br><br>
             <div><button type="submit" id="calculate">Calculate</button></div>
         </form>
-            <div>Volume of grain alcohol needed (ounces/mL/etc.):
-            <h2><p id="answer"></p></h2>
+            <div>
+                Volume of grain alcohol needed (ounces/mL/etc.):
+                <h2><p id="answer"></p></h2>
             </div>
             <footer>Note: The unit of measure for "Total volume of final product" must match the unit of measure for "Volume of grain alcohol needed" (ounces for ounces, mL for mL, etc.)</footer>
         </div>
@@ -45,13 +46,15 @@
                     <button type="submit">Post</button>
                 </form>
             </div>
-            <pre><span class="one-post"></span></pre>
-            <br>
-            <span id="previous-tenLink" data-id="posts" data-class="previous-ten"></span><span id="next-tenLink" data-id="posts" data-class="next-ten"></span>
+
+            <pre><div class="ten-posts"></div></pre>
+
+            <div class="skip-links">
+                <span id="previous-tenLink" data-id="posts" data-class="previous-ten"></span><span id="next-tenLink" data-id="posts" data-class="next-ten"></span>
+            </div>
         </div>
-        <div class="single-post">
-            This is the single post page
-        </div>
+        
+        <pre><div class="single-post"></div></pre>
    
         <script src="/static/index.js"></script>  
 

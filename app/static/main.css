@@ -32,12 +32,12 @@
     white-space: pre-wrap;
 }
 
-.one-post{
+div{
     font-family: 'Times New Roman', Times, serif;
 }
 
-#border{
-    border-bottom-style: solid;
+.border{
+    border-top-style: solid;
     border-color: black;
     border-width: 1px;
 }
@@ -48,5 +48,4 @@
 
 .date{
     font-size: 14px;
-    font-
 }

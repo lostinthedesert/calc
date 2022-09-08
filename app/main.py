@@ -15,6 +15,8 @@ from app.database import SessionLocal, engine, get_db
 
 from .config import settings
 
+from typing import List
+
 # from .utils import hash, verify
 
 # from . import oauth2
@@ -29,7 +31,6 @@ app=FastAPI()
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
-
 
 
 # HOME
@@ -59,19 +60,19 @@ def create_comment(comment: schemas.CreateComment, db: Session=Depends(get_db)):
     db.refresh(new_comment)
     new_comment=db.query(models.Posts).filter(models.Posts.id==new_comment.id).first()
     print(new_comment.content)
-    return {"title": new_comment.title,
-            "content": new_comment.content,
-            "created": new_comment.created_at}
+    return "success"
 
 # GET POST
-@app.get("/get_post")
+@app.get("/get_post", response_model=List[schemas.ReturnPost])
 def create_post(db: Session=Depends(get_db), limit: int=10, skip: int=0):
-    all_posts=db.query(models.Posts).order_by(models.Posts.created_at.desc()).limit(limit).offset(skip).all()
-    list=[]
-    for post in all_posts:
-        list.append([post.title, post.content, str(post.created_at)])
-    print(list[0][1])
-    return {"posts": list}
+    posts=db.query(models.Posts).order_by(models.Posts.created_at.desc()).limit(limit).offset(skip).all()
+    return posts
+
+# GET ONE POST
+@app.get("/get_single/{id}", response_model=schemas.ReturnPost)
+def create_post(id: int, db: Session=Depends(get_db)):
+    post=db.query(models.Posts).filter(models.Posts.id==id).first()
+    return post
 
 # CREATE USER
 # @app.post("/new_user", status_code=status.HTTP_201_CREATED)

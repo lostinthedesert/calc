@@ -15,11 +15,22 @@ class CreatePost(BaseModel):
     title: str
     content: str
 
-class ReturnPost(CreatePost):
+class ReturnPost(BaseModel):
+    id: int
+    title: str
+    content: str
     created_at: datetime
+
+    class Config:
+        orm_mode = True
 
 class CreateComment(BaseModel):
     content: str
+    comment_id: int
+
+class ReturnComment(CreateComment):
+    created_at: datetime
+
 
 # class Token(BaseModel):
 #     access_token: str
