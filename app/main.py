@@ -7,7 +7,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel, EmailStr
 
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, or_
 
 import app.models as models, app.schemas as schemas
 
@@ -65,13 +65,13 @@ def create_comment(comment: schemas.CreateComment, db: Session=Depends(get_db)):
 # GET POST
 @app.get("/get_post", response_model=List[schemas.ReturnPost])
 def create_post(db: Session=Depends(get_db), limit: int=10, skip: int=0):
-    posts=db.query(models.Posts).order_by(models.Posts.created_at.desc()).limit(limit).offset(skip).all()
+    posts=db.query(models.Posts).filter(models.Posts.comment_id==None).order_by(models.Posts.created_at.desc()).limit(limit).offset(skip).all()
     return posts
 
 # GET ONE POST
-@app.get("/get_single/{id}", response_model=schemas.ReturnPost)
+@app.get("/get_single/{id}", response_model=List[schemas.ReturnPost])
 def create_post(id: int, db: Session=Depends(get_db)):
-    post=db.query(models.Posts).filter(models.Posts.id==id).first()
+    post=db.query(models.Posts).filter(or_(models.Posts.id==id, models.Posts.comment_id==id)).all()
     return post
 
 # CREATE USER

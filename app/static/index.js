@@ -11,6 +11,7 @@ function getPosts(skip){
                 $(`#border${i}`).append(`<div class='content'>${posts[i].content}</div><br>`);
                 $(`#border${i}`).append(`<div class='date'>${posts[i].created_at}</div><br>`);
                 $(`#border${i}`).append(`<div class='single-postLink' data-id='single-post' data-class=${posts[i].id}><a href=''>Comment</a></div><br>`)};
+            $(".single-postLink").click(handleClickEvent);
             $("#next-tenLink").html("<a href='' id='next-ten'>Next 10 posts</a>");
             $("#previous-tenLink").html("<a href='' id='previous-ten'>Previous 10 posts</a> | ")
             if(skip==0){
@@ -19,7 +20,6 @@ function getPosts(skip){
                 $("#next-tenLink").addClass("hidden");}
             if(posts[9].id==1){
                 $("#next-tenLink").addClass("hidden");}
-            $(".single-postLink").click(handleClickEvent);
         }})};
 
 function getSingle(id){
@@ -27,9 +27,18 @@ function getSingle(id){
         type: 'GET',
         success: function(data){
             const post=data;
-            $(".single-post").append(`<div class='title'>${post.title}</div><br>`)
-            $(".single-post").append(`<div class='content'>${post.content}</div><br>`)
-            $(".single-post").append(`<div class='date'>${post.created_at}</div><br>`)
+            console.log(post);
+            $(".top-post").html(`<div class='title'>${post[0].title}</div><br>`);
+            $(".top-post").append(`<div class='content'>${post[0].content}</div><br>`);
+            $(".top-post").append(`<div class='date'>${post[0].created_at}</div><br>`);
+            $("#comment-form").append(`<input class='hidden' id='id' value='${id}'>`);
+            if(post.length>1){
+                for(var i=1; i<post.length; i++){
+                    $(".comments").append(`<div class='border' id='comment-border${i}'></div>`);
+                    $(`#comment-border${i}`).append(`<div class='content'>${post[i].content}</div><br>`);
+                    $(`#comment-border${i}`).append(`<div class='date'>${post[i].created_at}</div><br>`);
+                }
+            }
         }
     })
 };
@@ -63,8 +72,10 @@ function handleClickEvent(e){
     }
 
     if(newClass=="single-post"){
-        $(".single-post").html("");
+        $(".top-post").html("");
+        $(".comments").html("");
         const id=$(this).data("class");
+        $("#id").remove();
         getSingle(id);
     }
 }
@@ -98,15 +109,35 @@ $(document).ready(function() {
         e.preventDefault();
         const TITLE=$("#title").val().trim();
         const CONTENT=$("#content").val().trim();
-        post=JSON.stringify({"title":TITLE, "content": CONTENT});
+        const post=JSON.stringify({"title":TITLE, "content": CONTENT});
         $.ajax("/create_post",{
             type: 'POST',
             contentType:'application/json',
             data: post,
             success: function(){
                 $("#post-form").trigger("reset");
-                $(".one-post").html("")
+                $(".ten-posts").html("")
                 getPosts(0);
 
                 
             }});})
+
+// COMMENTS
+    $("#comment-form").submit(function(e){
+        e.preventDefault();
+        const content=$("#reply").val().trim();
+        const commentId=$("#id").val();
+        console.log(commentId);
+        const post=JSON.stringify({"content":content, "comment_id": commentId});
+        $.ajax("/create_comment",{
+            type: 'POST',
+            contentType: 'application/json',
+            data: post,
+            success: function(){
+                $("#comment-form").trigger("reset");
+                $(".comments").html("");
+                getSingle(commentId);
+            }
+        })
+
+    })

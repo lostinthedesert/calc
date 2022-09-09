@@ -42,7 +42,7 @@
                     <label for="title">Title</label><br>
                     <input type="text" id="title" required><br>
                     <label for="content">Content</label><br>
-                    <textarea type="textarea" id="content" rows="10" cols="40" required></textarea><br>
+                    <textarea class="textarea" type="textarea" id="content" rows="10" cols="40" required></textarea><br>
                     <button type="submit">Post</button>
                 </form>
             </div>
@@ -54,7 +54,19 @@
             </div>
         </div>
         
-        <pre><div class="single-post"></div></pre>
+        <div class="single-post">
+            
+            <pre><div class="top-post"></div></pre>
+
+            <form id="comment-form" autocomplete="off">
+                <label for="reply">Reply</label><br>
+                <textarea class="textarea" type="textarea" id="reply" rows="10" cols="40" required></textarea><br>
+                <button type="submit">Add comment</button>
+            </form>
+            <br>
+            <pre><div class="comments"></div></pre>
+        
+        </div>
    
         <script src="/static/index.js"></script>  
 

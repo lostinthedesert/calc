@@ -17,7 +17,7 @@ class CreatePost(BaseModel):
 
 class ReturnPost(BaseModel):
     id: int
-    title: str
+    title: Optional[str]=None
     content: str
     created_at: datetime
 
@@ -30,6 +30,9 @@ class CreateComment(BaseModel):
 
 class ReturnComment(CreateComment):
     created_at: datetime
+
+    class Config:
+        orm_mode = True
 
 
 # class Token(BaseModel):
