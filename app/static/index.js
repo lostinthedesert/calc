@@ -127,6 +127,7 @@ $(document).ready(function() {
         e.preventDefault();
         const content=$("#reply").val().trim();
         const commentId=$("#id").val();
+        $("#id").remove();
         console.log(commentId);
         const post=JSON.stringify({"content":content, "comment_id": commentId});
         $.ajax("/create_comment",{
