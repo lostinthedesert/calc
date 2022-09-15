@@ -91,6 +91,8 @@ $(document).ready(function() {
 
     wireUpClickEvents();
 
+    // FORM SUBMISSIONS
+
 // CALCULATOR FORM  
     $("#form").submit(function(e){
         e.preventDefault();
@@ -108,7 +110,17 @@ $(document).ready(function() {
     $("#post-form").submit(function(e){
         e.preventDefault();
         const TITLE=$("#title").val().trim();
+        if(TITLE==""){
+            $("#title").val("");
+            $("#title").focus();
+            return false;
+        }
         const CONTENT=$("#content").val().trim();
+        if(CONTENT==""){
+            $("#content").val("");
+            $("#content").focus();
+            return false;
+        }
         const post=JSON.stringify({"title":TITLE, "content": CONTENT});
         $.ajax("/create_post",{
             type: 'POST',
@@ -126,6 +138,11 @@ $(document).ready(function() {
     $("#comment-form").submit(function(e){
         e.preventDefault();
         const content=$("#reply").val().trim();
+        if(content==""){
+            $("#reply").val("");
+            $("#reply").focus();
+            return false;
+        }
         const commentId=$("#id").val();
         $("#id").remove();
         console.log(commentId);
