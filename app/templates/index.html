@@ -12,6 +12,7 @@
 
         <title>Welcome to Pando</title>
     </head>
+    <!-- calculator page only -->
     <body>
         <header>
             <a id="homeLink" data-id="calculator" href="">Home</a> | <a id="postsLink" data-id="posts" data-class="postLink" href="">Post Something</a>
@@ -20,24 +21,28 @@
         <div class="calculator selected">
         <h2>Dilution Calculator</h2>
         <form id="form" data-id="calculatorForm" autocomplete="off">
-            <label for="everclear">Alcohol by Volume (ABV) of grain alcohol (not proof)</label><div></div>
-            <input type="number" step=".01" pattern="[0-9]*" inputmode="decimal" id="everclear" required><div></div><br>
-            <label for="final">Desired ABV of final product (not proof)</label><div></div>
-            <input type="number" step=".01" pattern="[0-9]*" inputmode="decimal" id="final" required><div></div><br>
-            <label for="volume">Total volume of final product (e.g. 64oz = 64)</label><div></div>
-            <input type="number" step=".01" pattern="[0-9]*" inputmode="decimal" id="volume" required><br><br>
-            <div><button type="submit" id="calculate">Calculate</button></div>
+            <div class="form-item"><label for="everclear">What is the alcohol by volume (ABV) of your grain alcohol? Enter only numbers and decimal points (no "%" symbols)</label></div>
+            <div class="form-item"><input size="5" type="number" step=".01" pattern="[0-9]*" inputmode="decimal" class="calc-input" id="everclear" required>%</div>
+            <div class="form-item"><label for="final">What would you like the ABV of your final product to be?</label></div>
+            <div class="form-item"><input size="5" type="number" step=".01" pattern="[0-9]*" inputmode="decimal" class="calc-input" id="final" required>%</div>
+            <div class="form-item"><label for="volume">What will the total volume of your final product be? This can be any amount you like. Enter only numbers and decimal points.</label></div>
+            <div class="form-item"><input size="7" type="number" step=".01" pattern="[0-9]*" inputmode="decimal" class="calc-input" id="volume" required></div>
+            <div class="form-item"><button type="submit" id="calculate">Calculate</button></div><br>
         </form>
-            <div>
-                Volume of grain alcohol needed (ounces/mL/etc.):
-                <h2><p id="answer"></p></h2>
+            <div id="results">
+                <div>
+                This is the volume of grain alcohol you need to achieve the desired ABV for your final product:
+                </div>
+                <div><h2 id="answer"></h2></div>
+                <div id="footer">Note: The unit of measure (e.g. ounces, milliliters, etc.) must be the same for all volumes used in this calculator. So if you measured your desired final product volume in ounces, you should also measure your grain alcohol in ounces.</div>
             </div>
-            <footer>Note: The unit of measure for "Total volume of final product" must match the unit of measure for "Volume of grain alcohol needed" (ounces for ounces, mL for mL, etc.)</footer>
         </div>
-
+<!-- message board begins here -->
+    
+    <!-- last 10 posts page -->
         <div class="posts">
-            <h2>All posts</h2>
             <div id="create-post">
+                <h2>Create a post</h2>
                 <form id="post-form" autocomplete="off">
                     <label for="title">Title</label><br>
                     <input type="text" id="title" required><br>
@@ -46,14 +51,14 @@
                     <button type="submit">Post</button>
                 </form>
             </div>
-
+            <h2>All posts</h2>
             <pre><div class="ten-posts"></div></pre>
 
             <div class="skip-links">
                 <span id="previous-tenLink" data-id="posts" data-class="previous-ten"></span><span id="next-tenLink" data-id="posts" data-class="next-ten"></span>
             </div>
         </div>
-        
+<!-- post replies page -->
         <div class="single-post">
             
             <pre><div class="top-post"></div></pre>
@@ -63,7 +68,6 @@
                 <textarea class="textarea" type="textarea" id="reply" rows="10" cols="40" required></textarea><br>
                 <button type="submit">Add comment</button>
             </form>
-            <br>
             <pre><div class="comments"></div></pre>
         
         </div>

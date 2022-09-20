@@ -17,12 +17,6 @@ from .config import settings
 
 from typing import List
 
-# from .utils import hash, verify
-
-# from . import oauth2
-
-# from .routers import customers
-
 models.Base.metadata.create_all(bind=engine)
 
 app=FastAPI()
@@ -71,40 +65,6 @@ def create_post(db: Session=Depends(get_db), limit: int=10, skip: int=0):
 # GET ONE POST
 @app.get("/get_single/{id}", response_model=List[schemas.ReturnPost])
 def create_post(id: int, db: Session=Depends(get_db)):
-    post=db.query(models.Posts).filter(or_(models.Posts.id==id, models.Posts.comment_id==id)).all()
+    post=db.query(models.Posts).filter(or_(models.Posts.id==id, models.Posts.comment_id==id)).order_by(models.Posts.created_at.desc()).all()
     return post
-
-# CREATE USER
-# @app.post("/new_user", status_code=status.HTTP_201_CREATED)
-# def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-#     check_name=db.query(models.Users).filter(func.lower(models.Users.name)==func.lower(user.name)).first()
-#     if check_name:
-#         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE)
-#     hashed_password=hash(user.pword)
-#     user.pword=hashed_password
-#     db_user = models.Users(**user.dict())
-#     db.add(db_user)
-#     db.commit()
-#     db.refresh(db_user)
-#     data=db.query(models.Users).filter(models.Users.id==db_user.id).first()
-#     print(data.mail +" "+ data.name)
-#     return data.name
-
-# LOGIN
-# @app.post("/login", response_model=schemas.Token)
-# def user_login(credentials:OAuth2PasswordRequestForm=Depends(), db: Session=Depends(get_db)):
-#     user=db.query(models.Users).filter(func.lower(models.Users.name)==func.lower(credentials.username)).first()
-#     if not user:
-#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-#     if not verify(credentials.password, user.pword):
-#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-#     access_token=oauth2.create_access_token(data={"user_id":user.id})
-#     return {"access_token": access_token, "token_type": "bearer", "name": user.name}
-
-# CREATE POSTS
-# @app.get("/create_post")
-# def create_post(request:Request, db: Session=Depends(get_db)):
-#     name=db.query(models.Users).filter(models.Users.name==current_user.name).first()
-#     print(name.name)
-#     return templates.TemplateResponse("create_post.html", {"request": request, "name":name.name})
 

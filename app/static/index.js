@@ -10,7 +10,7 @@ function getPosts(skip){
                 $(`#border${i}`).append(`<div class='title'>${posts[i].title}</div><br>`);
                 $(`#border${i}`).append(`<div class='content'>${posts[i].content}</div><br>`);
                 $(`#border${i}`).append(`<div class='date'>${posts[i].created_at}</div><br>`);
-                $(`#border${i}`).append(`<div class='single-postLink' data-id='single-post' data-class=${posts[i].id}><a href=''>Comment</a></div><br>`)};
+                $(`#border${i}`).append(`<div class='single-postLink' data-id='single-post' data-class=${posts[i].id}><a href=''>Comment</a></div>`)};
             $(".single-postLink").click(handleClickEvent);
             $("#next-tenLink").html("<a href='' id='next-ten'>Next 10 posts</a>");
             $("#previous-tenLink").html("<a href='' id='previous-ten'>Previous 10 posts</a> | ")
@@ -27,27 +27,26 @@ function getSingle(id){
         type: 'GET',
         success: function(data){
             const post=data;
-            console.log(post);
-            $(".top-post").html(`<div class='title'>${post[0].title}</div><br>`);
-            $(".top-post").append(`<div class='content'>${post[0].content}</div><br>`);
-            $(".top-post").append(`<div class='date'>${post[0].created_at}</div><br>`);
-            $("#comment-form").append(`<input class='hidden' id='id' value='${id}'>`);
-            if(post.length>1){
-                for(var i=1; i<post.length; i++){
+            for(var i=0; i<post.length; i++){
+                if(post[i].comment_id==undefined){
+                    $(".top-post").html(`<div class='title'>${post[i].title}</div>`);
+                    $(".top-post").append(`<div class='content'>${post[i].content}</div>`);
+                    $(".top-post").append(`<div class='date'>${post[i].created_at}</div>`);
+                    $("#comment-form").append(`<input class='hidden' id='id' value='${id}'>`);}
+                if(post[i].comment_id=true){
                     $(".comments").append(`<div class='border' id='comment-border${i}'></div>`);
-                    $(`#comment-border${i}`).append(`<div class='content'>${post[i].content}</div><br>`);
-                    $(`#comment-border${i}`).append(`<div class='date'>${post[i].created_at}</div><br>`);
+                    $(`#comment-border${i}`).append(`<div class='content'>${post[i].content}</div>`);
+                    $(`#comment-border${i}`).append(`<div class='date'>${post[i].created_at}</div`);}
                 }
-            }
-        }
-    })
-};
+        }})};
                 
 function handleClickEvent(e){
     e.preventDefault();
     $(".selected").removeClass("selected");
     const newClass=$(this).data("id");
     $(`.${newClass}`).addClass("selected");
+    $("#form").trigger("reset");
+    $("#answer").html("");
 
     if($(this).data("class")=="next-ten"){
         skip+=10;
@@ -60,8 +59,6 @@ function handleClickEvent(e){
     }
 
     if($(this).data("class")=="postLink"){
-        $("#form").trigger("reset");
-        $("#answer").html("");
         $(".hidden").removeClass("hidden");
         skip=0;
     }
@@ -103,6 +100,7 @@ $(document).ready(function() {
         var volume = $("#volume").val();
         var intVolume = parseFloat(volume);
         var answer = (intVolume * intFinal) / intEverclear;
+        $("#results").addClass("selected");
         $("#answer").html(answer);
     });})
 

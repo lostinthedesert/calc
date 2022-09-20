@@ -1,9 +1,44 @@
+body{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+header{
+    background: linear-gradient(to right, rgba(8, 163, 50,.4), rgba(8, 163, 50,.1));
+    padding: 1% 1%;
+}
+
 .calculator{
     display: none;
 }
 
 .calculator.selected{
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    padding: 0% 1%;
+}
+
+#form{
+    display: flex;
+    flex-direction: column;
+}
+
+.form-item{
+    margin: 1.5% 0%;
+}
+
+.calc-input{
+    height: 5mm;
+    font-size: 5mm;
+}
+
+#results{
+    display: none;
+}
+
+#results.selected{
     display: block;
+    margin: 2% 0%;
 }
 
 .posts{
@@ -12,6 +47,7 @@
 
 .posts.selected{
     display: block;
+    padding: 0% 1%;
 }
 
 .single-post{
@@ -20,6 +56,7 @@
 
 .single-post.selected{
     display: block;
+    padding: 0% 1%;
 }
 
 .hidden{
@@ -27,25 +64,37 @@
 }
 
 .textarea {
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     resize: none;
     white-space: pre-wrap;
 }
 
 div{
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .border{
     border-top-style: solid;
     border-color: black;
     border-width: 1px;
+    padding: 1% 0%;
 }
 
 .title{
     font-weight: bold;
+    margin: 1% 0%;
+}
+
+.content{
+    margin: 2% 0%;
+    white-space: pre-wrap;
 }
 
 .date{
-    font-size: 14px;
+    font-size: 12px;
+}
+
+pre{
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
