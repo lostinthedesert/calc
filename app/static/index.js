@@ -28,16 +28,16 @@ function getSingle(id){
         success: function(data){
             const post=data;
             for(var i=0; i<post.length; i++){
-                if(post[i].comment_id==undefined){
+                if(post[i].comment_id==null){
                     $(".top-post").html(`<div class='title'>${post[i].title}</div>`);
                     $(".top-post").append(`<div class='content'>${post[i].content}</div>`);
                     $(".top-post").append(`<div class='date'>${post[i].created_at}</div>`);
-                    $("#comment-form").append(`<input class='hidden' id='id' value='${id}'>`);}
-                if(post[i].comment_id=true){
+                    $("#comment-form").append(`<input class='hidden comment-id' id='comment-id' value='${id}'>`);}
+                if(post[i].comment_id !== null && i<post.length-1){
                     $(".comments").append(`<div class='border' id='comment-border${i}'></div>`);
                     $(`#comment-border${i}`).append(`<div class='content'>${post[i].content}</div>`);
                     $(`#comment-border${i}`).append(`<div class='date'>${post[i].created_at}</div`);}
-                }
+            }
         }})};
                 
 function handleClickEvent(e){
@@ -45,8 +45,10 @@ function handleClickEvent(e){
     $(".selected").removeClass("selected");
     const newClass=$(this).data("id");
     $(`.${newClass}`).addClass("selected");
+    
     $("#form").trigger("reset");
     $("#answer").html("");
+    $('.comment-id').remove();
 
     if($(this).data("class")=="next-ten"){
         skip+=10;
@@ -72,7 +74,6 @@ function handleClickEvent(e){
         $(".top-post").html("");
         $(".comments").html("");
         const id=$(this).data("class");
-        $("#id").remove();
         getSingle(id);
     }
 }
@@ -141,8 +142,8 @@ $(document).ready(function() {
             $("#reply").focus();
             return false;
         }
-        const commentId=$("#id").val();
-        $("#id").remove();
+        const commentId=$("#comment-id").val();
+        $(".comment-id").remove();
         console.log(commentId);
         const post=JSON.stringify({"content":content, "comment_id": commentId});
         $.ajax("/create_comment",{
