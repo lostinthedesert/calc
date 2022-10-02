@@ -50,23 +50,14 @@ header{
     padding: 0% 1%;
 }
 
-.single-post{
-    display: none;
-}
-
-.single-post.selected{
-    display: block;
-    padding: 0% 1%;
-}
-
 .hidden{
     display: none;
 }
 
 .textarea {
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     resize: none;
     white-space: pre-wrap;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 div{
@@ -77,24 +68,52 @@ div{
     border-top-style: solid;
     border-color: black;
     border-width: 1px;
-    padding: 1% 0%;
+}
+.top-post{
+    padding: .5% .25%;
+    background: rgba(0,0,0,.05);
+    margin-bottom: 1%;
 }
 
 .title{
     font-weight: bold;
-    margin: 1% 0%;
 }
 
 .content{
-    margin: 2% 0%;
-    white-space: pre-wrap;
+    margin: 1% 0%;
 }
 
 .date{
     font-size: 12px;
+    margin-bottom: .5%;
 }
 
 pre{
     white-space: pre-wrap;
     word-wrap: break-word;
+}
+
+.comments{
+    margin-left: 3%;
+    margin-top: 1%;
+}
+
+#comment-form{
+    margin-left: 3%;
+}
+
+.reply-form{
+    margin-top: ;
+}
+
+.comment{
+    margin-bottom: 1%;
+}
+
+.comment-date{
+    font-size: 12px;
+}
+
+.comment-content{
+
 }

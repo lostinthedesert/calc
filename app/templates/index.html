@@ -22,9 +22,9 @@
         <h2>Dilution Calculator</h2>
         <form id="form" data-id="calculatorForm" autocomplete="off">
             <div class="form-item"><label for="everclear">What is the alcohol by volume (ABV) of your grain alcohol? Enter only numbers and decimal points (no "%" symbols)</label></div>
-            <div class="form-item"><input size="5" type="number" step=".01" pattern="[0-9]*" inputmode="decimal" class="calc-input" id="everclear" required>%</div>
+            <div class="form-item"><input size="5" type="number" step=".01" pattern="[0-9]*" inputmode="decimal" class="calc-input" id="everclear" required> %</div>
             <div class="form-item"><label for="final">What would you like the ABV of your final product to be?</label></div>
-            <div class="form-item"><input size="5" type="number" step=".01" pattern="[0-9]*" inputmode="decimal" class="calc-input" id="final" required>%</div>
+            <div class="form-item"><input size="5" type="number" step=".01" pattern="[0-9]*" inputmode="decimal" class="calc-input" id="final" required> %</div>
             <div class="form-item"><label for="volume">What will the total volume of your final product be? This can be any amount you like. Enter only numbers and decimal points.</label></div>
             <div class="form-item"><input size="7" type="number" step=".01" pattern="[0-9]*" inputmode="decimal" class="calc-input" id="volume" required></div>
             <div class="form-item"><button type="submit" id="calculate">Calculate</button></div><br>
@@ -58,10 +58,10 @@
                 <span id="previous-tenLink" data-id="posts" data-class="previous-ten"></span><span id="next-tenLink" data-id="posts" data-class="next-ten"></span>
             </div>
         </div>
-<!-- post replies page -->
-        <div class="single-post">
+
+        <!-- <div class="single-post">
             
-            <pre><div class="top-post"></div></pre>
+            <pre><div class="top-post border"></div></pre>
 
             <form id="comment-form" autocomplete="off">
                 <label for="reply">Reply</label><br>
@@ -70,7 +70,7 @@
             </form>
             <pre><div class="comments"></div></pre>
         
-        </div>
+        </div> -->
    
         <script src="/static/index.js"></script>  
 

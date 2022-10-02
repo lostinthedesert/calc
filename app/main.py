@@ -65,6 +65,6 @@ def create_post(db: Session=Depends(get_db), limit: int=10, skip: int=0):
 # GET ONE POST
 @app.get("/get_single/{id}", response_model=List[schemas.ReturnPost])
 def create_post(id: int, db: Session=Depends(get_db)):
-    post=db.query(models.Posts).filter(or_(models.Posts.id==id, models.Posts.comment_id==id)).order_by(models.Posts.created_at.desc()).all()
+    post=db.query(models.Posts).filter(models.Posts.comment_id==id).order_by(models.Posts.created_at.desc()).all()
     return post
 
