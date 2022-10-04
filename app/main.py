@@ -66,5 +66,7 @@ def create_post(db: Session=Depends(get_db), limit: int=10, skip: int=0):
 @app.get("/get_single/{id}", response_model=List[schemas.ReturnPost])
 def create_post(id: int, db: Session=Depends(get_db)):
     post=db.query(models.Posts).filter(models.Posts.comment_id==id).order_by(models.Posts.created_at.desc()).all()
+    if not post:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     return post
 

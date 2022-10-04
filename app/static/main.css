@@ -1,5 +1,7 @@
 body{
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    display: flex;
+    flex-direction: column;
 }
 
 header{
@@ -50,6 +52,10 @@ header{
     padding: 0% 1%;
 }
 
+#create-post{
+    background-color: rgba(0,0,0,.05);
+}
+
 .hidden{
     display: none;
 }
@@ -70,7 +76,7 @@ div{
     border-width: 1px;
 }
 .top-post{
-    padding: .5% .25%;
+    padding: .5% .5%;
     background: rgba(0,0,0,.05);
     margin-bottom: 1%;
 }
@@ -107,7 +113,9 @@ pre{
 }
 
 .comment{
-    margin-bottom: 1%;
+    margin-bottom: 2%;
+    background: rgba(0,0,0,.05);
+    padding: .5%;
 }
 
 .comment-date{
@@ -116,4 +124,16 @@ pre{
 
 .comment-content{
 
+}
+
+.skip-links{
+    background: linear-gradient(to right, rgba(8, 163, 50,.4), rgba(8, 163, 50,.1));
+    padding: .5%;
+}
+
+#footer-div{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    
 }

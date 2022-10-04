@@ -15,10 +15,10 @@ function getPosts(skip){
                 $(".ten-posts").append(`<div class='top-post' id='post${i}'></div>`);
                 $(`#post${i}`).append(`<div class='title-date'><span class='title'>${posts[i].title}</span> | <span class='date'>${posts[i].created_at}</span></div>`);
                 $(`#post${i}`).append(`<div class='content'>${posts[i].content}</div>`);
-                $(`#post${i}`).append(`<div class='comment-reply-link'><span id='link${i}'><a id='comment-link${i}' class='comment' data-index='${i}' data-id='posts' data-class='comment' data-post-number='${posts[i].id}' href=''>Comments</a></span> | <span id='reply${i}'><a id='reply-link${i}' class='reply' data-index='${i}' data-id='posts' data-class='reply' data-post-number='${posts[i].id}' href=''>Reply</a></span></div>`);
+                $(`#post${i}`).append(`<div class='comment-reply-link'><span id='link${i}'><a id='comment-link${i}' class='comment-link' data-index='${i}' data-id='posts' data-class='comment' data-post-number='${posts[i].id}' href=''>Comments</a></span> | <span id='reply${i}'><a id='reply-link${i}' class='reply' data-index='${i}' data-id='posts' data-class='reply' data-post-number='${posts[i].id}' href=''>Reply</a></span></div>`);
                 $(`#post${i}`).append(`<div class='reply-form hidden' id='reply-form${i}'></div>`);
             }
-            $(".comment").click(handleClickEvent);
+            $(".comment-link").click(handleClickEvent);
             $(".reply").click(handleClickEvent);
             $("#next-tenLink").html("<a href='' id='next-ten'>Next 10 posts</a>");
             $("#previous-tenLink").html("<a href='' id='previous-ten'>Previous 10 posts</a> | ")
@@ -33,6 +33,10 @@ function getPosts(skip){
 function getSingle(id, index){
     $.ajax("/get_single/"+id,{
         type: 'GET',
+        error: function(xhr){
+            if(xhr.status==404){
+                return false;
+            }},
         success: function(data){
             const post=data;
             $(`#comments${index}`).remove();
@@ -89,9 +93,7 @@ function handleClickEvent(e){
         if($(this).data("type") == "comments"){
             $(`#comments${index}`).toggle();
         }
-        if($(this).data("type") == "reply"){
-            $(`#reply-form${index}`).toggle();
-    }}
+    }
 
     if($(this).data("class") == "reply"){
         const index=$(this).data("index");
