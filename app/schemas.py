@@ -4,6 +4,7 @@ from re import S
 from typing import Optional
 from pydantic import BaseModel, EmailStr, validator
 
+epoch = datetime.utcfromtimestamp(0)
 
 class CreatePost(BaseModel):
     title: str
@@ -20,7 +21,7 @@ class ReturnPost(BaseModel):
     
     @validator('created_at')
     def format_date(cls, datetime):
-        return datetime.strftime("%b %d, %Y at %I:%M%p")
+        return (datetime - epoch).total_seconds() * 1000.0
         
 
 class CreateComment(BaseModel):

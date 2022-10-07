@@ -13,7 +13,9 @@ function getPosts(skip){
             for(var i=0; i<posts.length; i++){
                 $(".ten-posts").append("<div class='border'></div>");
                 $(".ten-posts").append(`<div class='top-post' id='post${i}'></div>`);
-                $(`#post${i}`).append(`<div class='title-date'><span class='title'>${posts[i].title}</span> | <span class='date'>${posts[i].created_at}</span></div>`);
+                const date = new Date(posts[i].created_at);
+                const created_at = date.toLocaleString();
+                $(`#post${i}`).append(`<div class='title-date'><span class='title'>${posts[i].title}</span> | <span class='date'>${created_at}</span></div>`);
                 $(`#post${i}`).append(`<div class='content'>${posts[i].content}</div>`);
                 $(`#post${i}`).append(`<div class='comment-reply-link'><span id='link${i}'><a id='comment-link${i}' class='comment-link' data-index='${i}' data-id='posts' data-class='comment' data-post-number='${posts[i].id}' href=''>Comments</a></span> | <span id='reply${i}'><a id='reply-link${i}' class='reply' data-index='${i}' data-id='posts' data-class='reply' data-post-number='${posts[i].id}' href=''>Reply</a></span></div>`);
                 $(`#post${i}`).append(`<div class='reply-form hidden' id='reply-form${i}'></div>`);
@@ -26,8 +28,10 @@ function getPosts(skip){
                 $("#previous-tenLink").addClass("hidden");}
             if(posts.length<10){
                 $("#next-tenLink").addClass("hidden");}
-            if(posts[9].id==1){
-                $("#next-tenLink").addClass("hidden");}
+            try{
+                if(posts[9].id==1){
+                $("#next-tenLink").addClass("hidden");}}
+            catch(err){};
         }})};
 
 function getSingle(id, index){
@@ -43,7 +47,9 @@ function getSingle(id, index){
             $(`#post${index}`).append(`<div class='comments' id='comments${index}'></div>`);
             for(var i=0; i<post.length; i++){
                 $(`#comments${index}`).append(`<div class='comment' id='comment${index}-${i}'></div>`);
-                $(`#comment${index}-${i}`).append(`<div class='comment-date'>${post[i].created_at}</div>`);
+                const date = new Date(post[i].created_at);
+                const created_at = date.toLocaleString();
+                $(`#comment${index}-${i}`).append(`<div class='comment-date'>${created_at}</div>`);
                 $(`#comment${index}-${i}`).append(`<div class='comment-content'>${post[i].content}</div>`);
                 }
             $(`#link${index}`).html(`<a id='toggle-link${index}' data-id='posts' data-class='toggle' data-type='comments' data-index='${index}' href=''>Comments</a>`);
