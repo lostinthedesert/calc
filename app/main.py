@@ -54,7 +54,7 @@ def create_comment(comment: schemas.CreateComment, db: Session=Depends(get_db)):
     db.refresh(new_comment)
     new_comment=db.query(models.Posts).filter(models.Posts.id==new_comment.id).first()
     print(new_comment.content)
-    return "success"
+    return new_comment.comment_id
 
 # GET POST
 @app.get("/get_post", response_model=List[schemas.ReturnPost])

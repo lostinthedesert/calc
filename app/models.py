@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, CheckConstraint, Column, ForeignKey, Integer, String
 from sqlalchemy.sql.sqltypes import TIMESTAMP
-from sqlalchemy.sql import func, expression
+from sqlalchemy.sql import expression
 from sqlalchemy.sql.expression import text
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.compiler import compiles
