@@ -7,6 +7,62 @@ var commentForm =
     <button type='submit'>Add comment</button><br>
     </form>`;
 
+function handleClickEvent(e){
+    e.preventDefault();
+    
+    const newClass = $(this).data("id");
+    hideAndDisplayPages(newClass);
+    
+    const linkIdentifier = $(this).data("class");
+
+    switch(linkIdentifier){
+        case "home-link":
+            resetCalculatorAndPostForms();
+            break;
+        case "post-link":
+            skip = 0;
+            getTenPosts(skip);
+            break;
+        case "next-ten":
+            skip += 10;
+            getTenPosts(skip);
+            break;
+        case "previous-ten":
+            skip -= 10;
+            getTenPosts(skip);
+            break;
+        case "comment":
+            var id = $(this).data("post-number");
+            var index = $(this).data("index");
+            getSinglePostComments(id, index);
+            break;
+        case "reply":
+            var index = $(this).data("index");
+            var id = $(this).data("post-number");
+            renderReplyFormHTML(index, id);
+            $(`#comment-form${index}`).submit(function(e){
+                e.preventDefault();
+                commentSubmit(index);
+            })
+            break;
+        case "toggle":
+            var index = $(this).data("index");
+            $(`#comments${index}`).toggle();
+            break;
+    }
+}
+
+function hideAndDisplayPages(newClass){
+    $(".selected").removeClass("selected");
+    $(`.${newClass}`).addClass("selected");
+}
+
+function resetCalculatorAndPostForms(){
+    $("#answer").html("");
+    $("#form").trigger("reset");
+    $("#post-form").trigger("reset");
+}
+
 function getTenPosts(skip){
     $.ajax("/get_post?skip="+skip,{
         type: 'GET',
@@ -51,17 +107,17 @@ function addEventHanldersForNewLinks(){
 
 function createSkipPageLinksAndRules(data){
     const posts = data;
-    $("#next-tenLink").html("<a href='' id='next-ten'>Next 10 posts</a>");
-    $("#previous-tenLink").html("<a href='' id='previous-ten'>Previous 10 posts</a> | ")
+    $("#next-ten-link").html("<a href='' id='next-ten'>Next 10 posts</a>");
+    $("#previous-ten-link").html("<a href='' id='previous-ten'>Previous 10 posts</a> | ")
     if(skip == 0){
-        $("#previous-tenLink").addClass("hidden");
+        $("#previous-ten-link").addClass("hidden");
     }
     if(posts.length < 10){
-        $("#next-tenLink").addClass("hidden");
+        $("#next-ten-link").addClass("hidden");
     }
     try{
         if(posts[9].id == 1){
-        $("#next-tenLink").addClass("hidden");
+        $("#next-ten-link").addClass("hidden");
         }
     }
     catch(err){};
@@ -103,55 +159,6 @@ function renderCommentsHTML(comments, index, i){
 function addToggleToCommentLink(index){
     $(`#link${index}`).html(`<a id='toggle-link${index}' data-id='posts' data-class='toggle' data-index='${index}' href=''>Comments</a>`);
     $(`#toggle-link${index}`).click(handleClickEvent);
-}
-
-function handleClickEvent(e){
-    e.preventDefault();
-    
-    $(".selected").removeClass("selected");
-    const newClass=$(this).data("id");
-    $(`.${newClass}`).addClass("selected");
-    
-    $("#answer").html("");
-    $("#form").trigger("reset");
-    $("#post-form").trigger("reset");
-    $("#comment-form").trigger("reset");
-    $('.comment-id').remove();
-    
-    const linkIdentifier = $(this).data("class");
-
-    switch(linkIdentifier){
-        case "postLink":
-            skip = 0;
-            getTenPosts(skip);
-            break;
-        case "next-ten":
-            skip += 10;
-            getTenPosts(skip);
-            break;
-        case "previous-ten":
-            skip -= 10;
-            getTenPosts(skip);
-            break;
-        case "comment":
-            var id = $(this).data("post-number");
-            var index = $(this).data("index");
-            getSinglePostComments(id, index);
-            break;
-        case "reply":
-            var index = $(this).data("index");
-            var id = $(this).data("post-number");
-            renderReplyFormHTML(index, id);
-            $(`#comment-form${index}`).submit(function(e){
-                e.preventDefault();
-                commentSubmit(index);
-            })
-            break;
-        case "toggle":
-            var index = $(this).data("index");
-            $(`#comments${index}`).toggle();
-            break;
-    }
 }
 
 $("#post-form").submit(function(e){
@@ -220,10 +227,10 @@ function renderReplyFormHTML(index, id){
 }
 
 function wireUpClickEvents(){
-    $("#homeLink").click(handleClickEvent);
-    $("#postsLink").click(handleClickEvent);
-    $("#next-tenLink").click(handleClickEvent);
-    $("#previous-tenLink").click(handleClickEvent);
+    $("#home-link").click(handleClickEvent);
+    $("#posts-link").click(handleClickEvent);
+    $("#next-ten-link").click(handleClickEvent);
+    $("#previous-ten-link").click(handleClickEvent);
 }
 
 $(document).ready(function() {
