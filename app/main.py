@@ -2,7 +2,6 @@ from fastapi import Depends, FastAPI, Request, status, HTTPException, Response
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import Response
-from fastapi.security import OAuth2PasswordRequestForm
 
 from pydantic import BaseModel, EmailStr
 
@@ -17,15 +16,17 @@ from .config import settings
 
 from typing import List
 
+import csv
+
+import os
+
+
 models.Base.metadata.create_all(bind=engine)
 
 app=FastAPI()
 
-# app.include_router(customers.router)
-
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
-
 
 # HOME
 @app.get("/")
@@ -70,3 +71,12 @@ def create_post(id: int, db: Session=Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     return post
 
+@app.get("/air_quality")
+def air_quality():
+    with open("./app/static/aqi.csv", 'r') as f:
+            reader = csv.DictReader(f)
+            items = list(reader)
+            f.close()
+    return items
+
+# print(os.getcwd())

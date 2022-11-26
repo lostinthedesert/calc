@@ -7,8 +7,39 @@ var commentForm =
     <button type='submit'>Add comment</button><br>
     </form>`;
 
+$(document).ready(function() {
+    
+    wireUpClickEvents();
+})
+
+function wireUpClickEvents(){
+    $("#home-link").click(handleClickEvent);
+    $("#posts-link").click(handleClickEvent);
+    $("#next-ten-link").click(handleClickEvent);
+    $("#previous-ten-link").click(handleClickEvent);
+    $("#air-quality").click(handleClickEvent);
+}
+
+$("#form").submit(function(e){
+    e.preventDefault();
+    var everclear = $("#everclear").val();
+    var intEverclear = parseFloat(everclear);
+    var final = $("#final").val();
+    var intFinal = parseFloat(final);
+    var volume = $("#volume").val();
+    var intVolume = parseFloat(volume);
+    var answer = (intVolume * intFinal) / intEverclear;
+    $("#results").addClass("selected");
+    $("#answer").html(answer);
+})
+
 function handleClickEvent(e){
     e.preventDefault();
+
+
+    // debugger
+
+    //e.currentTarget.attributes[0]
     
     const newClass = $(this).data("id");
     hideAndDisplayPages(newClass);
@@ -49,6 +80,8 @@ function handleClickEvent(e){
             var index = $(this).data("index");
             $(`#comments${index}`).toggle();
             break;
+        case "air-quality-link":
+            get_air_quality();
     }
 }
 
@@ -70,7 +103,9 @@ function getTenPosts(skip){
             tearDownPostsAndResetSkipLinks();
             parseTenPosts(data);
             addEventHanldersForNewLinks();
-            createSkipPageLinksAndRules(data);
+            createSkipPageLinks();
+            setPreviousLinkDisplay();
+            setNextLinkDisplay(data);
         }})};
 
 function tearDownPostsAndResetSkipLinks(){
@@ -78,8 +113,7 @@ function tearDownPostsAndResetSkipLinks(){
     $(".hidden").removeClass("hidden");
 }
 
-function parseTenPosts(data){
-    const posts = data;
+function parseTenPosts(posts){
     for(var i = 0; i < posts.length; i++){
         renderTenPostsHTML(i, posts);
     }
@@ -105,13 +139,18 @@ function addEventHanldersForNewLinks(){
     $(".reply").click(handleClickEvent);
 }
 
-function createSkipPageLinksAndRules(data){
-    const posts = data;
+function createSkipPageLinks(){
     $("#next-ten-link").html("<a href='' id='next-ten'>Next 10 posts</a>");
-    $("#previous-ten-link").html("<a href='' id='previous-ten'>Previous 10 posts</a> | ")
+    $("#previous-ten-link").html("<a href='' id='previous-ten'>Previous 10 posts</a> | ");
+}
+
+function setPreviousLinkDisplay(){
     if(skip == 0){
         $("#previous-ten-link").addClass("hidden");
     }
+}
+
+function setNextLinkDisplay(posts){
     if(posts.length < 10){
         $("#next-ten-link").addClass("hidden");
     }
@@ -120,7 +159,9 @@ function createSkipPageLinksAndRules(data){
         $("#next-ten-link").addClass("hidden");
         }
     }
-    catch(err){};
+    catch(err){
+        console.log("error in set next link display")
+    };
 }
 
 function getSinglePostComments(id, index){
@@ -141,8 +182,7 @@ function tearDownAndSetUpCommentSecion(index){
     $(`#post${index}`).append(`<div class='comments' id='comments${index}'></div>`);
 }
 
-function parseComments(data, index){
-    const comments=data;
+function parseComments(comments, index){
         for(var i = 0; i < comments.length; i++){
             renderCommentsHTML(comments, index, i);
         }
@@ -175,19 +215,23 @@ $("#post-form").submit(function(e){
         }});})
 
 function validatePostInputs(){
-    const TITLE=$("#title").val().trim();
-    if(TITLE == ""){
+    const title = $("#title").val().trim();
+    if(title == ""){
         $("#title").val("");
         $("#title").focus();
         return false;
     }
-    const CONTENT=$("#content").val().trim();
-    if(CONTENT == ""){
+    const content = $("#content").val().trim();
+    if(content == ""){
         $("#content").val("");
         $("#content").focus();
         return false;
     }
-    const post = JSON.stringify({"title":TITLE, "content": CONTENT});
+    return convertPostDataToJSON(title, content);
+}
+
+function convertPostDataToJSON(title, content){
+    const post = JSON.stringify({"title":title, "content": content});
     return post;
 }
 
@@ -199,7 +243,6 @@ function commentSubmit(index){
         data: comment,
         success: function(data){
             $(`#comment-form${index}`).trigger("reset");
-            // $(`#comments${index}`).html("");
             getSinglePostComments(data, index);
         }
     })
@@ -212,6 +255,10 @@ function validateCommentInput(){
         $("#reply").focus();
         return false;
     }
+    return convertCommentDataToJSON(content);
+}
+
+function convertCommentDataToJSON(content){
     const commentId = $("#comment-id").val();
     $(".comment-id").remove();
     const comment = JSON.stringify({"content":content, "comment_id": commentId});
@@ -226,27 +273,39 @@ function renderReplyFormHTML(index, id){
     $(`#comment-form${index}`).append(`<input class='hidden' id='comment-id' value='${id}'>`);
 }
 
-function wireUpClickEvents(){
-    $("#home-link").click(handleClickEvent);
-    $("#posts-link").click(handleClickEvent);
-    $("#next-ten-link").click(handleClickEvent);
-    $("#previous-ten-link").click(handleClickEvent);
+function get_air_quality(){
+    $.ajax("/air_quality",{
+        type: 'GET',
+        success: function(data){
+            console.log(data);
+            add_rows_to_aqi_table(data);
+        }
+    })
 }
 
-$(document).ready(function() {
-    
-    wireUpClickEvents();
+const tableHeader = `
+    <tr>
+        <th>Date + time (in hours)</th>
+        <th>City, State</th>
+        <th>AQI</th>
+        <th>Category</th>
+    </tr>`;
 
-// CALCULATOR FORM  
-    $("#form").submit(function(e){
-        e.preventDefault();
-        var everclear = $("#everclear").val();
-        var intEverclear = parseFloat(everclear);
-        var final = $("#final").val();
-        var intFinal = parseFloat(final);
-        var volume = $("#volume").val();
-        var intVolume = parseFloat(volume);
-        var answer = (intVolume * intFinal) / intEverclear;
-        $("#results").addClass("selected");
-        $("#answer").html(answer);
-    });})
+function add_rows_to_aqi_table(data){
+    $("#aqi-table").html("");
+    $("#aqi-table").append(tableHeader);
+
+    for(var i = 0; i < data.length; i++){
+        render_aqi_tables(data, i)
+    }
+}
+
+function render_aqi_tables(data, i){
+    $("#aqi-table").append(
+    `<tr>
+    <td>${data[i].date} ${data[i].time}:00</td>
+    <td>${data[i].city}, ${data[i].state}</td>
+    <td>${data[i].aqi}</td>
+    <td>${data[i].category}</td>
+    </tr>`);
+}
