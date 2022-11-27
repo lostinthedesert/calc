@@ -4,7 +4,7 @@ var index = null;
 var commentForm = 
     `<form id='comment-form${index}' class='comment-form' autocomplete='off'>
     <textarea class='textarea' type='textarea' id='reply' rows='10' cols='50' required></textarea>
-    <button type='submit'>Add comment</button><br>
+    <button type='submit'>Add comment</button> <button type='button' id='cancel-comment${index}'>Cancel</button><br>
     </form>`;
 
 $(document).ready(function() {
@@ -74,6 +74,10 @@ function handleClickEvent(e){
             $(`#comment-form${index}`).submit(function(e){
                 e.preventDefault();
                 commentSubmit(index);
+            })
+            $(`#cancel-comment${index}`).click(function(e){
+                e.preventDefault();
+                $(".comment-form").remove();
             })
             break;
         case "toggle":
@@ -270,6 +274,7 @@ function renderReplyFormHTML(index, id){
     $(`#reply-form${index}`).removeClass("hidden");
     $(`#reply-form${index}`).html(commentForm);
     $(`#comment-formnull`).attr("id", `comment-form${index}`);
+    $(`#cancel-commentnull`).attr("id", `cancel-comment${index}`);
     $(`#comment-form${index}`).append(`<input class='hidden' id='comment-id' value='${id}'>`);
 }
 
