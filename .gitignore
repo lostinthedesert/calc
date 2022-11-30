@@ -1,5 +1,5 @@
 notation/
 .env
-app/routers/
-app/static/aqi.csv
+/app/routers/
+/app/static/aqi.csv
 venv/
