@@ -73,7 +73,7 @@ def create_post(id: int, db: Session=Depends(get_db)):
 
 @app.get("/air_quality")
 def air_quality():
-    with open("./app/static/aqi.csv", 'r') as f:
+    with open("../aqi2.csv", 'r') as f:
             reader = csv.DictReader(f)
             items = list(reader)
             f.close()

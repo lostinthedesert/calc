@@ -15,12 +15,8 @@ def send_request(zip_code):
     aqi = json_response[1]['AQI']
     category = json_response[1]['Category']['Name']
 
-    with open("./app/static/aqi.csv", "a") as f:
+    with open("../aqi2.csv", "a") as f:
         f.write(f"\n{date},{time},{city},{state},{aqi},{category}")
         f.close()
-    
-    # new_entry = open("./app/static/aqi.csv", "a")
-    # new_entry.write(f"\n{date},{time},{city},{state},{aqi},{category}")
-    # new_entry.close()
 
 send_request(85013)
