@@ -77,6 +77,7 @@ def air_quality():
             reader = csv.DictReader(f)
             items = list(reader)
             f.close()
+    items.reverse()
     return items
 
 # print(os.getcwd())
