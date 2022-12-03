@@ -36,6 +36,8 @@ def calculator(request: Request):
 # CREATE POST
 @app.post("/create_post")
 def create_post(post: schemas.CreatePost, db: Session=Depends(get_db)):
+    assert len(post.title) < 120, "Title cannot exceed 120 characters"
+    assert len(post.content) < 5000, "Content cannot exceed 5000 characters"
     new_post=models.Posts(**post.dict())
     db.add(new_post)
     db.commit()
@@ -49,6 +51,7 @@ def create_post(post: schemas.CreatePost, db: Session=Depends(get_db)):
 # CREATE COMMENT
 @app.post("/create_comment")
 def create_comment(comment: schemas.CreateComment, db: Session=Depends(get_db)):
+    assert len(comment.content) < 5000, "Comment cannot exceed 5000 characters"
     new_comment=models.Posts(**comment.dict())
     db.add(new_comment)
     db.commit()

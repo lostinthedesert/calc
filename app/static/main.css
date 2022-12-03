@@ -20,7 +20,7 @@ header{
     padding: 0% 1%;
 }
 
-#form{
+#calculator-form{
     display: flex;
     flex-direction: column;
 }

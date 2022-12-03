@@ -10,7 +10,7 @@
         </script>
         <link href="/static/main.css" rel="stylesheet">
 
-        <title>Welcome to Pando</title>
+        <title>Pando</title>
     </head>
     <!-- calculator page only -->
     <body>
@@ -20,11 +20,11 @@
         
         <div class="calculator selected">
             <h2>Dilution Calculator</h2>
-            <form id="form" data-id="calculatorForm" autocomplete="off">
+            <form id="calculator-form" data-id="calculatorForm" autocomplete="off">
                 <div class="form-item"><label for="everclear">What is the alcohol by volume (ABV) of your grain alcohol? Enter only numbers and decimal points (no "%" symbols)</label></div>
-                <div class="form-item"><input size="5" type="number" step=".01" pattern="[0-9]*" inputmode="decimal" class="calc-input" id="everclear" required> %</div>
+                <div class="form-item"><input id="everclear" max="100" size="5" type="number" step=".01" pattern="[0-9]*" inputmode="decimal" class="calc-input" required> %</div>
                 <div class="form-item"><label for="final">What would you like the ABV of your final product to be?</label></div>
-                <div class="form-item"><input size="5" type="number" step=".01" pattern="[0-9]*" inputmode="decimal" class="calc-input" id="final" required> %</div>
+                <div class="form-item"><input id="final" max="100" size="5" type="number" step=".01" pattern="[0-9]*" inputmode="decimal" class="calc-input" required> %</div>
                 <div class="form-item"><label for="volume">What will the total volume of your final product be? This can be any amount you like. Enter only numbers and decimal points.</label></div>
                 <div class="form-item"><input size="7" type="number" step=".01" pattern="[0-9]*" inputmode="decimal" class="calc-input" id="volume" required></div>
                 <div class="form-item"><button type="submit" id="calculate">Calculate</button></div><br>
@@ -68,6 +68,8 @@
             Source: airnow.gov
         </div>
         <script src="/static/index.js"></script>  
+        <script src="/static/aqiPage.js"></script> 
+        <script src="/static/postSomething.js"></script>
         
     </body>
 
