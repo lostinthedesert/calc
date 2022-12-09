@@ -1,6 +1,9 @@
 function get_air_quality(){
     $.ajax("/air_quality",{
         type: 'GET',
+        error: function(xhr){
+            console.log("error code: "+ xhr.status);
+        },
         success: function(data){
             console.log(data);
             add_rows_to_aqi_table(data);

@@ -1,18 +1,18 @@
 $(document).ready(function() {
+
     $("a").click(buildElementObject);
+
 })
 
-var skip = 0;
+// var skip = 0;
 
 function buildElementObject(e){
     e.preventDefault();
-    // debugger
-    //e.currentTarget.attributes[0]
 
     var elementObject = {
         "dataID": $(this).data("id"),
         "dataClass": $(this).data("class")
-        }
+    }
 
     if($(this).data("post-number")){
         elementObject.postNumber = $(this).data("post-number");
@@ -28,11 +28,11 @@ function buildElementObject(e){
 function hideAndDisplayPages(object){
     $(".selected").removeClass("selected");
     $(`.${object.dataID}`).addClass("selected");
+    
     runSwitchStatement(object);
 }
 
 function runSwitchStatement(object){
-    
     switch(object.dataClass){
         case "home-link":
             resetCalculatorAndPostForms();

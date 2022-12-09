@@ -8,27 +8,34 @@ var commentForm =
     <button type='submit'>Add comment</button> <button type='button' id='cancel-comment${index}'>Cancel</button><br>
     </form>`;
 
+// display posts functions begin here
+
 function getTenPosts(skip){
     $.ajax("/get_post?skip="+skip,{
         type: 'GET',
+        error: function(xhr){ 
+            console.log("Error code: "+ xhr.status);
+        },
         success: function(data){
-            tearDownPostsAndResetSkipLinks();
-            parseTenPosts(data);
-            addEventHanldersForNewLinks();
-            createSkipPageLinks();
-            setPreviousLinkDisplay();
-            setNextLinkDisplay(data);
-        }})};
+            tearDownPostsAndResetSkipLinks(data);
+        }
+    })
+}
 
-function tearDownPostsAndResetSkipLinks(){
+function tearDownPostsAndResetSkipLinks(data){
     $(".ten-posts").html("");
+    $("#post-error").remove();
     $(".hidden").removeClass("hidden");
+    
+    parseTenPosts(data);
 }
 
 function parseTenPosts(posts){
     for(var i = 0; i < posts.length; i++){
         renderTenPostsHTML(i, posts);
     }
+    
+    addEventHanldersForNewLinks(posts);
 }
 
 function renderTenPostsHTML(i, posts){
@@ -46,14 +53,27 @@ function renderTenPostsHTML(i, posts){
     $(`#post${i}`).append(`<div class='reply-form hidden' id='reply-form${i}'></div>`);
 }
 
-function addEventHanldersForNewLinks(){
+function addEventHanldersForNewLinks(data){
     $(".comment-link").click(buildElementObject);
     $(".reply").click(buildElementObject);
+    
+    createSkipPageLinks(data);
 }
 
-function createSkipPageLinks(){
-    $("#next-ten-link").html("<a href='' id='next-ten'>Next 10 posts</a>");
-    $("#previous-ten-link").html("<a href='' id='previous-ten'>Previous 10 posts</a> | ");
+function createSkipPageLinks(data){
+    $("#next-ten-link").html("<a href='' id='next-ten' data-id='posts' data-class='next-ten'>Next 10 posts</a>");
+    $("#previous-ten-link").html("<a href='' id='previous-ten' data-id='posts' data-class='previous-ten'>Previous 10 posts</a> | ");
+    
+    createSkipPageListeners(data);
+}
+
+function createSkipPageListeners(data){
+    $("#next-ten").click(buildElementObject);
+    $("#previous-ten").click(buildElementObject);
+    
+    setPreviousLinkDisplay();
+    
+    setNextLinkDisplay(data);
 }
 
 function setPreviousLinkDisplay(){
@@ -63,41 +83,39 @@ function setPreviousLinkDisplay(){
 }
 
 function setNextLinkDisplay(posts){
-    if(posts.length < 10){
+    if(posts.length < 10 || posts[9].id == 1){
         $("#next-ten-link").addClass("hidden");
     }
-    try{
-        if(posts[9].id == 1){
-        $("#next-ten-link").addClass("hidden");
-        }
-    }
-    catch(err){
-        console.log("error in set next link display")
-    };
 }
+
+// single post comment section build out starts here
 
 function getSinglePostComments(id, index){
     $.ajax("/get_single/"+id,{
         type: 'GET',
-        error: function(xhr){
-            if(xhr.status==404){
-                return false;
-            }},
+        error: function(xhr){ 
+            console.log("error code: "+ xhr.status);
+        },
         success: function(data){
-            tearDownAndSetUpCommentSecion(index);
-            parseComments(data, index); 
-            addToggleToCommentLink(index);           
-        }})};
-
-function tearDownAndSetUpCommentSecion(index){
-    $(`#comments${index}`).remove();
-    $(`#post${index}`).append(`<div class='comments' id='comments${index}'></div>`);
+            tearDownAndSetUpCommentSecion(index, data);            
+        }
+    })
 }
 
-function parseComments(comments, index){
-        for(var i = 0; i < comments.length; i++){
-            renderCommentsHTML(comments, index, i);
-        }
+function tearDownAndSetUpCommentSecion(index, data){
+    $(`#comments${index}`).remove();
+    $(`#error-div${index}`).remove();
+    $(`#post${index}`).append(`<div class='comments' id='comments${index}'></div>`);
+    
+    parseComments(index, data);
+}
+
+function parseComments(index, comments){
+    for(var i = 0; i < comments.length; i++){
+        renderCommentsHTML(comments, index, i);
+    }
+        
+    addToggleToCommentLink(index);
 }
 
 function renderCommentsHTML(comments, index, i){
@@ -113,55 +131,69 @@ function addToggleToCommentLink(index){
     $(`#toggle-link${index}`).click(buildElementObject);
 }
 
+// add new post functions begins here
+
 $("#post-form").submit(function(e){
     e.preventDefault();
-    const post = validatePostInputs();
-    $.ajax("/create_post",{
-        type: 'POST',
-        contentType:'application/json',
-        data: post,
-        success: function(){
-            $("#post-form").trigger("reset");
-            getTenPosts(0);  
-        }});})
+    
+    validatePostInputs();
+})
 
 function validatePostInputs(){
     const title = $("#title").val().trim();
     if(title == ""){
         $("#title").val("");
         $("#title").focus();
+        
         return false;
     }
+    
     const content = $("#content").val().trim();
     if(content == ""){
         $("#content").val("");
         $("#content").focus();
+        
         return false;
     }
-    return convertPostDataToJSON(title, content);
+    
+    convertPostDataToJSON(title, content);
 }
 
 function convertPostDataToJSON(title, content){
     const post = JSON.stringify({"title":title, "content": content});
-    return post;
+    
+    sendPost(post);
 }
 
-function validateCommentInput(){
-    const content = $("#reply").val().trim();
-    if(content == ""){
-        $("#reply").val("");
-        $("#reply").focus();
-        return false;
+function sendPost(post){
+    $.ajax("/create_post",{
+        type: 'POST',
+        contentType:'application/json',
+        data: post,
+        error: function(xhr){
+            handleSendPostError(xhr);
+        },
+        success: function(){
+            $("#post-form").trigger("reset");
+            
+            getTenPosts(0);  
+        }
+    })
+}
+
+function handleSendPostError(xhr){
+    $("#create-post").append("<div id='post-error'></div>");
+    if (xhr.status == 500){
+        $("#post-error").html("Failed to post. Comment may be too long");
+        console.log("Error code: " + xhr.status);
     }
-    return convertCommentDataToJSON(content);
+    else{
+        $("#post-error").html("Failed to post. Possible 404 not found");
+        console.log("Error code: " + xhr.status);
+    }
 }
 
-function convertCommentDataToJSON(content){
-    const commentId = $("#comment-id").val();
-    $(".comment-id").remove();
-    const comment = JSON.stringify({"content":content, "comment_id": commentId});
-    return comment;
-}
+// reply form and adding comments to single posts begin here
 
 function renderReplyFormHTML(index, id){
     $(".comment-form").remove();
@@ -170,33 +202,73 @@ function renderReplyFormHTML(index, id){
     $(`#comment-formnull`).attr("id", `comment-form${index}`);
     $(`#cancel-commentnull`).attr("id", `cancel-comment${index}`);
     $(`#comment-form${index}`).append(`<input class='hidden' id='comment-id' value='${id}'>`);
+    
     createReplyListener(index);
+    
     createCommentCancelListener(index);
 }
 
 function createReplyListener(index){
     $(`#comment-form${index}`).submit(function(e){
         e.preventDefault();
-        commentSubmit(index);
+        
+        validateCommentInput(index);
     })
 }
 
-function commentSubmit(index){
-    const comment = validateCommentInput();
+function validateCommentInput(index){
+    const content = $("#reply").val().trim();
+    if(content == ""){
+        $("#reply").val("");
+        $("#reply").focus();
+        
+        return false;
+    }
+    
+    convertCommentDataToJSON(content, index);
+}
+
+function convertCommentDataToJSON(content, index){
+    const commentId = $("#comment-id").val();
+    $(".comment-id").remove();
+    const comment = JSON.stringify({"content":content, "comment_id": commentId});
+    
+    sendComment(comment, index);
+}
+
+function sendComment(comment, index){
     $.ajax("/create_comment",{
         type: 'POST',
         contentType: 'application/json',
         data: comment,
+        error: function(xhr){
+            handleSendCommentError(index, xhr);
+        },
         success: function(data){
             $(`#comment-form${index}`).trigger("reset");
+            
             getSinglePostComments(data, index);
         }
     })
 }
 
+function handleSendCommentError(index, xhr){
+    $(`#reply-form${index}`).append(`<div id='error-div${index}'></div>`);
+    
+    if (xhr.status == 500){
+        $(`#error-div${index}`).html("Failed to post. Comment may be too long");
+        console.log("Error code: " + xhr.status);
+    }
+    else{
+        $(`#error-div${index}`).html("Failed to post. Possible 404 not found");
+        console.log("Error code: " + xhr.status);
+    }
+}
+
 function createCommentCancelListener(index){
     $(`#cancel-comment${index}`).click(function(e){
         e.preventDefault();
+        
         $(".comment-form").remove();
     })
 }
