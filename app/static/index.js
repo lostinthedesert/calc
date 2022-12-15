@@ -4,8 +4,6 @@ $(document).ready(function() {
 
 })
 
-// var skip = 0;
-
 function buildElementObject(e){
     e.preventDefault();
 
@@ -22,32 +20,26 @@ function buildElementObject(e){
         elementObject.index = $(this).data("index");
     }
 
-    hideAndDisplayPages(elementObject);
-}
-
-function hideAndDisplayPages(object){
-    $(".selected").removeClass("selected");
-    $(`.${object.dataID}`).addClass("selected");
+    runSwitchStatement(elementObject);
     
-    runSwitchStatement(object);
 }
 
 function runSwitchStatement(object){
     switch(object.dataClass){
         case "home-link":
-            resetCalculatorAndPostForms();
+            resetCalculatorAndPostForms(object);
             break;
         case "post-link":
             skip = 0;
-            getTenPosts(skip);
+            getTenPosts(skip, object);
             break;
         case "next-ten":
             skip += 10;
-            getTenPosts(skip);
+            getTenPosts(skip, object);
             break;
         case "previous-ten":
             skip -= 10;
-            getTenPosts(skip);
+            getTenPosts(skip, object);
             break;
         case "comment":
             getSinglePostComments(object.postNumber, object.index);
@@ -59,14 +51,15 @@ function runSwitchStatement(object){
             $(`#comments${object.index}`).toggle();
             break;
         case "air-quality-link":
-            get_air_quality();
+            get_air_quality(object);
     }
 }
 
-function resetCalculatorAndPostForms(){
+function resetCalculatorAndPostForms(object){
     $("#answer").html("");
     $("#calculator-form").trigger("reset");
     $("#post-form").trigger("reset");
+    hideAndDisplayPages(object);
 }
 
 $("#calculator-form").submit(function(e){

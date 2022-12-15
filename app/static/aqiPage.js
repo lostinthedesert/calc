@@ -1,14 +1,14 @@
-function get_air_quality(){
-    $.ajax("/air_quality",{
-        type: 'GET',
-        error: function(xhr){
-            console.log("error code: "+ xhr.status);
-        },
-        success: function(data){
-            console.log(data);
-            add_rows_to_aqi_table(data);
-        }
+function get_air_quality(object){
+    $.ajax("/air_quality")
+    
+    .then(result => {
+        hideAndDisplayPages(object);
+        return result
     })
+    .then(result => 
+        add_rows_to_aqi_table(result))
+    .catch(error => 
+        console.error(`There was an error: ${error}`));
 }
 
 const tableHeader = `
