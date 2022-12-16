@@ -38,6 +38,9 @@ function render_aqi_tables(data, i){
     </tr>`);
 }
 
+// fixing bug
+
+
 function render_aqi_tables_template(data, i){
 
     var newRow = $(".row-template").clone();
