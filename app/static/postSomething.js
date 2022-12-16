@@ -10,40 +10,22 @@ var commentForm =
 
 // display posts functions begin here
 
-function getTenPosts(skip, object = { dataID: "posts", dataClass: "post-link" }){
-    $.ajax("/get_post?skip="+skip)
+function getTenPosts(skip, object = { dataID: "posts", dataClass: "post-link" }) {
+    $.ajax("/get_post?skip=" + skip)
 
         .then(result => {
-            if(object.dataClass != "next-ten" || "previous-ten"){
+            if (object.dataClass != "next-ten" || "previous-ten") {
                 hideAndDisplayPages(object);
             }
-            return result
-        })
-        .then(result => {
             tearDownPostsAndResetSkipLinks();
-            return result
-        })
-        .then(result => 
-            parseTenPosts(result)
-        )
-        .then(result => {
+            parseTenPosts(result);
             addEventHanldersForNewLinks();
-            return result
-        })
-        .then(result => {
             createSkipPageLinks();
-            return result
-        })
-        .then(result => {
             createSkipPageListeners();
-            return result
-        })
-        .then(result => {
             setPreviousLinkDisplay();
-            return result
-        })
-        .then(result => {
             setNextLinkDisplay(result)
+
+            return result;
         })
         .catch(error => console.error("An error occurred: ", error.statusText));
 }
