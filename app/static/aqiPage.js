@@ -37,3 +37,5 @@ function render_aqi_tables(data, i){
     <td>${data[i].category}</td>
     </tr>`);
 }
+
+// fixing bug
