@@ -37,3 +37,19 @@ function render_aqi_tables(data, i){
     <td>${data[i].category}</td>
     </tr>`);
 }
+
+function render_aqi_tables_template(data, i){
+
+    var newRow = $(".row-template").clone();
+    newRow.class("row-data");
+    newRow.style("")
+
+    newRow.$(".col1").html(${data[i].date} ${data[i].time});
+
+    newRow.$(".col2").html(${data[i].city}, ${data[i].state});
+
+    newRow.$(".col3").html(${data[i].aqi});
+    newRow.$(".col4").html(${data[i].category});
+
+
+}
