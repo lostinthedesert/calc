@@ -79,6 +79,7 @@ def air_quality():
             items = list(reader)
             f.close()
     items.reverse()
+    del items[49:]
     return items
 
 # print(os.getcwd())
