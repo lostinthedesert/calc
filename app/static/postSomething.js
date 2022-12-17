@@ -44,7 +44,6 @@ function parseTenPosts(posts){
     for(var i = 0; i < posts.length; i++){
         renderTenPostsHTML(i, posts);
     }
-    return posts;
 }
 
 function renderTenPostsHTML(i, posts){
@@ -101,16 +100,9 @@ function getSinglePostComments(id, index){
             if(result.length == 0){
                 throw new Error("This post has no comments");
             }
-            return result
-        })
-        .then(result => 
-            tearDownAndSetUpCommentSecion(index, result)
-        )
-        .then(result => 
-            parseComments(index, result)
-        )
-        .then(() => {
-            addToggleToCommentLink(index);
+            tearDownAndSetUpCommentSecion(index, result);
+            parseComments(index, result);
+            addToggleToCommentLink(index)
         })
         .catch(error => console.error(`An error occurred: ${error}`));
 }
@@ -183,12 +175,11 @@ function sendPost(post){
         contentType:'application/json',
         data: post
     })
-        .then(() =>
-            $("#post-form").trigger("reset")
-        )
-        .then(() =>
+        .then(() => {
+            $("#post-form").trigger("reset");
+    
             getTenPosts(0)
-        )
+        })
         .catch(error => {console.error("An error occurred: ", error.statusText)});
 }
 
@@ -241,11 +232,9 @@ function sendComment(comment, index){
     })
         .then(result => {
             $(`#comment-form${index}`).trigger("reset");
-            return result
-        })
-        .then(result =>
+            
             getSinglePostComments(result, index)
-        )
+        })
         .catch(error => console.error("An error occurred: ", error.statusText));
 }
 
