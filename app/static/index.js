@@ -48,7 +48,8 @@ function runSwitchStatement(object){
             renderReplyFormHTML(object.index, object.postNumber);
             break;
         case "toggle":
-            $(`#comments${object.index}`).toggle();
+            $(`#comments${object.index}`).css("display","none");
+            $(`#toggle-link${object.index}`).css("display","none");
             break;
         case "air-quality-link":
             get_air_quality(object);
