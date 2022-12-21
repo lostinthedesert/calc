@@ -88,7 +88,8 @@ function getSinglePostComments(id, index){
             }
             addHideCommentLink(index, result);
             tearDownAndSetUpCommentSecion(index);
-            parseComments(index, result)})
+            parseComments(index, result)
+        })
         .catch(error => console.error(`An error occurred: ${error}`));
 }
 
@@ -209,7 +210,6 @@ function validateCommentInput(index){
 function convertCommentDataToJSON(content, index){
     const commentId = $(`#reply-form${index} #comment-id`).val();
     const comment = JSON.stringify({"content":content, "comment_id": commentId});
-    console.log(commentId);
     sendComment(comment, index);
 }
 
@@ -222,14 +222,13 @@ function sendComment(comment, index){
         .then(result => {
             $(`#reply-form${index} #reply`).val("");
             getSinglePostComments(result, index)
-        )
+        })
         .catch(error => console.error("An error occurred: ", error.statusText));
 }
 
 function createCommentCancelListener(index){
     $(`#cancel-button${index}`).click(function(e){
         e.preventDefault();
-        
         $(".reply-form").remove();
     })
 }
