@@ -2,57 +2,34 @@ function get_air_quality(object){
     $.ajax("/air_quality")
     
     .then(result => {
-        hideAndDisplayPages(object);
-        return result
+        hideAndDisplayPages(object); 
+        add_rows_to_aqi_table(result)
     })
-    .then(result => 
-        add_rows_to_aqi_table(result))
     .catch(error => 
         console.error(`There was an error: ${error}`));
 }
 
-const tableHeader = `
-    <tr>
-        <th>Date + time (in hours)</th>
-        <th>City, State</th>
-        <th>AQI</th>
-        <th>Category</th>
-    </tr>`;
-
 function add_rows_to_aqi_table(data){
+    const tableHeader = $("#table-header").clone();
+    const rowTemplate = $(".row-template").clone();
     $("#aqi-table").html("");
     $("#aqi-table").append(tableHeader);
+    $("#aqi-table").append(rowTemplate);
+
 
     for(var i = 0; i < data.length; i++){
-        render_aqi_tables(data, i)
+        render_aqi_tables_template(data, i)
     }
 }
 
-function render_aqi_tables(data, i){
-    $("#aqi-table").append(
-    `<tr>
-    <td>${data[i].date} ${data[i].time}:00</td>
-    <td>${data[i].city}, ${data[i].state}</td>
-    <td>${data[i].aqi}</td>
-    <td>${data[i].category}</td>
-    </tr>`);
-}
-
-// fixing bug
-
-
 function render_aqi_tables_template(data, i){
-
+    
     var newRow = $(".row-template").clone();
-    newRow.class("row-data");
-    newRow.style("")
-
-    newRow.$(".col1").html(${data[i].date} ${data[i].time});
-
-    newRow.$(".col2").html(${data[i].city}, ${data[i].state});
-
-    newRow.$(".col3").html(${data[i].aqi});
-    newRow.$(".col4").html(${data[i].category});
-
-
+    newRow.removeClass("row-template").addClass(`row-template${i}`);
+    newRow.css("display", "");
+    $("#aqi-table").append(newRow);
+    $(`.row-template${i} > .col1`).html(`${data[i].date} ${data[i].time}:00`);
+    $(`.row-template${i} > .col2`).html(`${data[i].city}, ${data[i].state}`);
+    $(`.row-template${i} > .col3`).html(`${data[i].aqi}`);
+    $(`.row-template${i} > .col4`).html(`${data[i].category}`);
 }

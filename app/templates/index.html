@@ -50,10 +50,46 @@
                 </form>
             </div>
             <h2>All posts</h2>
-            <pre><div class="ten-posts"></div></pre>
+            <div class="ten-posts">
+                <pre>
+                <div id="clone-div" style="display:none">
+                    <div class='clone-border' style="display:none"></div>
+                    <div class='top-post-clone' id='post' style="display:none">
+                        <div class='title-date'><span class='title'></span> | <span class='date'></span></div>
+                        <div class='content'></div>
+                        <div class='comment-reply-link' id='comment-reply-link'>
+                            <span id='link'>
+                                <a id='comment-link' class='comment-link' data-index='' data-id='posts' data-class='comment' data-post-number='' href=''>Comments</a> | 
+                                <a id='reply-link' class='reply' data-index='' data-id='posts' data-class='reply' data-post-number='' href=''>Reply</a>
+                                <a id='toggle-link' class="toggle-link" data-id='posts' data-class='toggle' data-index='' href='' style="display:none"> | Hide comments</a>
+                            </span> 
+                        </div>
+                        <div class='reply-form-div' id='reply-form-div'></div>
+                    </div>
+
+
+                    <form class= 'reply-form-template' autocomplete= 'off' style="display:none">
+                        <textarea class= 'textarea' type= 'textarea' id= 'reply' rows= '10' cols= '50' required></textarea>
+                        <input class='hidden' id='comment-id' value=''><br>
+                        <button type= 'submit' id="reply-button">Add comment</button> <button type= 'button' id= 'cancel-button'>Cancel</button><br>
+                    </form>
+
+                    <div class="comments-template" id="comments" style="display:none">
+                        <div class="comment-template" id="" style="display: none">
+                            <div class="comment-date"></div>
+                            <div class="comment-content"></div>
+                        </div>
+
+                    </div>
+                </div>
+                </pre>
+            </div>
 
             <div class="skip-links">
-                <span id="previous-ten-link"></span><span id="next-ten-link"></span>
+                <span>
+                    <a href='' id='previous-ten' data-id='posts' data-class='previous-ten'>Previous 10 posts | </a> 
+                    <a href='' id='next-ten' data-id='posts' data-class='next-ten'>Next 10 posts</a>
+                </span>
             </div>
         </div>
 <!-- air quality page -->
@@ -61,13 +97,12 @@
             <h2>Particulate Matter (2.5) Air quality index for Phoenix, AZ</h2>
             <table id="aqi-table">
 
-                <tr>
+                <tr id="table-header">
                     <th>Date + time (in hours)</th>
                     <th>City, State</th>
                     <th>AQI</th>
                     <th>Category</th>
                 </tr>
-
 
                 <tr class="row-template" style="display:none">
                     <td class="col1"></td>
