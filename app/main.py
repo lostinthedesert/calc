@@ -1,7 +1,7 @@
 from fastapi import Depends, FastAPI, Request, status, HTTPException, Response
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import Response
+from fastapi.responses import Response, RedirectResponse
 
 from pydantic import BaseModel, EmailStr
 
@@ -33,6 +33,33 @@ templates = Jinja2Templates(directory="app/templates")
 def calculator(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
+# GET POST
+@app.get("/get_post", response_model=List[schemas.ReturnPost])
+def create_post(db: Session=Depends(get_db), limit: int=10, skip: int=0):
+    posts=db.query(models.Posts).filter(models.Posts.comment_id==None).order_by(models.Posts.created_at.desc()).limit(limit).offset(skip).all()
+    return posts
+
+# @app.get("/get-posts")
+# def redirect_get_posts():
+#     response = RedirectResponse(url="/")
+#     return response
+
+# GET ONE POST
+@app.get("/get_single/{id}", response_model=List[schemas.ReturnPost])
+def create_post(id: int, db: Session=Depends(get_db)):
+    post=db.query(models.Posts).filter(models.Posts.comment_id==id).order_by(models.Posts.created_at.desc()).all()
+    return post
+
+@app.get("/air_quality")
+def air_quality():
+    with open("../aqi2.csv", 'r') as f:
+            reader = csv.DictReader(f)
+            items = list(reader)
+            f.close()
+    items.reverse()
+    del items[49:]
+    return items
+
 # CREATE POST
 @app.post("/create_post")
 def create_post(post: schemas.CreatePost, db: Session=Depends(get_db)):
@@ -59,27 +86,3 @@ def create_comment(comment: schemas.CreateComment, db: Session=Depends(get_db)):
     new_comment=db.query(models.Posts).filter(models.Posts.id==new_comment.id).first()
     print(new_comment.content)
     return new_comment.comment_id
-
-# GET POST
-@app.get("/get_post", response_model=List[schemas.ReturnPost])
-def create_post(db: Session=Depends(get_db), limit: int=10, skip: int=0):
-    posts=db.query(models.Posts).filter(models.Posts.comment_id==None).order_by(models.Posts.created_at.desc()).limit(limit).offset(skip).all()
-    return posts
-
-# GET ONE POST
-@app.get("/get_single/{id}", response_model=List[schemas.ReturnPost])
-def create_post(id: int, db: Session=Depends(get_db)):
-    post=db.query(models.Posts).filter(models.Posts.comment_id==id).order_by(models.Posts.created_at.desc()).all()
-    return post
-
-@app.get("/air_quality")
-def air_quality():
-    with open("../aqi2.csv", 'r') as f:
-            reader = csv.DictReader(f)
-            items = list(reader)
-            f.close()
-    items.reverse()
-    del items[49:]
-    return items
-
-# print(os.getcwd())

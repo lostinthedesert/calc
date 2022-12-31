@@ -2,21 +2,29 @@
 
 // display posts functions begin here
 
-function getTenPosts(skip, object = { dataID: "posts", dataClass: "post-link" }){
-    $.ajax("/get_post?skip="+skip)
-
+function getTenPosts(skip = 0, object = { dataID: "posts", dataClass: "post-link" }){
+    $.ajax(object.href)
+    
         .then(result => {
-            if(object.dataClass != "next-ten" || "previous-ten"){
-                hideAndDisplayPages(object);
+            if(result.title){
+                console.log(result.title);
+                if(object.dataClass != "next-ten" || "previous-ten"){
+                    hideAndDisplayPages(object);
+                }
+                tearDownPostsAndResetSkipLinks();
+                parseTenPosts(result);
+                addEventHanldersForNewLinks();
+                setPreviousLinkDisplay(skip);
+                setNextLinkDisplay(result);
             }
-            return result
-        })
-        .then(result => {
-            tearDownPostsAndResetSkipLinks();
-            parseTenPosts(result);
-            addEventHanldersForNewLinks();
-            setPreviousLinkDisplay(skip);
-            setNextLinkDisplay(result)
+            else{
+                if(result.length == 0){
+                    throw new Error("This post has no comments");
+                }
+                tearDownAndSetUpCommentSecion(object.index);
+                addHideCommentLink(object.index);
+                parseComments(object.index, result)
+            }
         })
         .catch(error => console.error("An error occurred: ", error.statusText));
 }
@@ -53,7 +61,7 @@ function renderTenPostsHTML(i, posts){
     $(`#post${i} .title`).html(`${posts[i].title}`);
     $(`#post${i} .date`).html(`${date}`);
     $(`#post${i} .content`).html(`${posts[i].content}`);
-    $(`#post${i} .comment-link`).attr({'id': `comment-link${i}`, 'data-index': `${i}`, 'data-post-number': `${posts[i].id}`});
+    $(`#post${i} .comment-link`).attr({'id': `comment-link${i}`, 'data-index': `${i}`, 'data-post-number': `${posts[i].id}`, 'href': `get_single/${posts[i].id}`});
     $(`#post${i} .reply`).attr({'id': `reply-link${i}`, 'data-index': `${i}`, 'data-post-number':`${posts[i].id}`});
     $(`#post${i} #toggle-link`).attr({'id': `toggle-link${i}`, "data-index": `${i}`});
     $(`#post${i} .reply-form-div`).attr("id", `reply-form-div${i}`);
@@ -69,6 +77,7 @@ function setPreviousLinkDisplay(skip){
     if(skip == 0){
         $("#previous-ten").addClass("hidden");
     }
+
 }
 
 function setNextLinkDisplay(posts){
@@ -86,8 +95,8 @@ function getSinglePostComments(id, index){
             if(result.length == 0){
                 throw new Error("This post has no comments");
             }
-            addHideCommentLink(index, result);
             tearDownAndSetUpCommentSecion(index);
+            addHideCommentLink(index);
             parseComments(index, result)
         })
         .catch(error => console.error(`An error occurred: ${error}`));
@@ -103,7 +112,7 @@ function tearDownAndSetUpCommentSecion(index){
     $(`#post${index}`).append(newComments);
 }
 
-function addHideCommentLink(index, result){
+function addHideCommentLink(index){
     $(`#toggle-link${index}`).css("display","");
 
 }
