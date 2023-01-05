@@ -1,10 +1,9 @@
 $(document).ready(function() {
     $("a").click(buildElementObject);
 
-    // window.onpopstate = () =>{
-    //     location.hash = () =>{
-    //         const runThis = location.hash;
-    //         runThis(0);
+    // window.onpopstate = (e) => {
+    //     if(e.state){
+    //         buildElementObject(e.state);
     //     }
     // }
 })
@@ -12,17 +11,20 @@ $(document).ready(function() {
 function buildElementObject(e){
     e.preventDefault();
     
-
     var elementObject = {
         "ID": $(this).attr("id"),
         "dataID": $(this).data("id"),
         "dataClass": $(this).data("class"),
         "href": $(this).attr("href"),
         "postNumber": $(this).data("post-number"),
-        "index": $(this).data("index")
+        "skip": $(this).data("skip")
     }
-    console.log(elementObject);
     runSwitchStatement(elementObject);
+    
+    // window.location.hash = "";
+    // const url = window.location + `${elementObject.href}`;
+    // window.history.pushState(elementObject, "", url);
+    // window.location.hash = `${elementObject.href}`;
     
 }
 
@@ -39,25 +41,29 @@ function runSwitchStatement(object){
             break;
         case "post-link":
             skip = 0;
-            getTenPosts(skip, object);
+            object.skip = skip;
+            getPost(object);
             break;
         case "next-ten":
             skip += 10;
-            getTenPosts(skip, object.index, object);
+            object.skip = skip;
+            getPost(object);
             break;
         case "previous-ten":
             skip -= 10;
-            getTenPosts(skip, object);
+            object.skip = skip;
+            setRulesOnPreviousLinkClick(object);          
             break;
         case "comment":
-            getTenPosts(null, object);
+            object.skip = 0;
+            getPost(object);
             break;
         case "reply":
-            renderReplyFormHTML(object.index, object.postNumber);
+            renderReplyFormHTML(object);
             break;
         case "toggle":
-            $(`#comments${object.index}`).css("display","none");
-            $(`#toggle-link${object.index}`).css("display","none");
+            $(`#comments${object.postNumber}`).css("display","none");
+            $(`#toggle-link${object.postNumber}`).css("display","none");
             break;
         case "air-quality-link":
             get_air_quality(object);

@@ -15,6 +15,7 @@ class ReturnPost(BaseModel):
     title: Optional[str]=None
     content: str
     created_at: datetime
+    comment_id: Optional[int]=None
 
     class Config:
         orm_mode = True

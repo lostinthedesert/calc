@@ -2,69 +2,71 @@
 
 // display posts functions begin here
 
-function getTenPosts(skip = 0, object = { dataID: "posts", dataClass: "post-link" }){
-    $.ajax(object.href)
+function getPost(object = {dataID: "posts", dataClass: "post-link", "skip": 0}){
+    $.ajax(`${object.href}?skip=${object.skip}`)
     
         .then(result => {
-            if(result.title){
-                console.log(result.title);
-                if(object.dataClass != "next-ten" || "previous-ten"){
-                    hideAndDisplayPages(object);
+            if(object.dataClass == "post-link"){
+                hideAndDisplayPages(object);
                 }
-                tearDownPostsAndResetSkipLinks();
-                parseTenPosts(result);
+            if(object.dataClass != "comment"){
+                tearDownPostsAndResetSkipLinks(object);
+                parseTenPosts(result, object);
                 addEventHanldersForNewLinks();
-                setPreviousLinkDisplay(skip);
-                setNextLinkDisplay(result);
+                setPreviousLinkDisplay(object.skip);
+                setNextLinkDisplay(result, object);
             }
-            else{
+            if(object.dataClass == "comment"){
                 if(result.length == 0){
                     throw new Error("This post has no comments");
                 }
-                tearDownAndSetUpCommentSecion(object.index);
-                addHideCommentLink(object.index);
-                parseComments(object.index, result)
+                tearDownAndSetUpCommentSecion(object);
+                addHideCommentLink(object);
+                parseComments(object, result)
             }
         })
-        .catch(error => console.error("An error occurred: ", error.statusText));
+        .catch(error => console.error(`An error occurred: ${error}`));
 }
 
 function hideAndDisplayPages(object){
     $(".selected").removeClass("selected");
     $(`.${object.dataID}`).addClass("selected");
+    $(".ten-posts").remove();
 }
 
-function tearDownPostsAndResetSkipLinks(){
-    const cloneDiv = $("#clone-div").clone();
-    $(".ten-posts").html("");
+function tearDownPostsAndResetSkipLinks(object){
+    const newTenPosts = $(".ten-posts-template").clone();
+    newTenPosts.attr({"id": `ten-posts${object.skip}`, "class": "ten-posts", "style": "display:"})
+    $(`#ten-posts${object.skip - 10}`).css("display","none");
+    const referenceDiv = $("#skip-links");
+    newTenPosts.insertBefore(referenceDiv);
     $(".hidden").removeClass("hidden");
-    $(".ten-posts").html(cloneDiv);
 }
 
-function parseTenPosts(posts){
+function parseTenPosts(posts, object){
     for(var i = 0; i < posts.length; i++){
-        renderTenPostsHTML(i, posts);
+        renderTenPostsHTML(i, posts, object);
     }
 }
 
-function renderTenPostsHTML(i, posts){
+function renderTenPostsHTML(i, posts, object){
     const newBorder = $(".clone-border").clone();
     newBorder.removeClass("clone-border").addClass("border");
     newBorder.css("display", "");
     const newPost = $(".top-post-clone").clone();
-    newPost.attr("id", `post${i}`);
+    newPost.attr("id", `post${posts[i].id}`);
     newPost.removeClass("top-post-clone").addClass(`top-post`);
     newPost.css("display","");
-    $(".ten-posts").append(newBorder);
-    $(".ten-posts").append(newPost);
+    $(`#ten-posts${object.skip}`).append(newBorder);
+    $(`#ten-posts${object.skip}`).append(newPost);
     const date = new Date(posts[i].created_at).toLocaleString();
-    $(`#post${i} .title`).html(`${posts[i].title}`);
-    $(`#post${i} .date`).html(`${date}`);
-    $(`#post${i} .content`).html(`${posts[i].content}`);
-    $(`#post${i} .comment-link`).attr({'id': `comment-link${i}`, 'data-index': `${i}`, 'data-post-number': `${posts[i].id}`, 'href': `get_single/${posts[i].id}`});
-    $(`#post${i} .reply`).attr({'id': `reply-link${i}`, 'data-index': `${i}`, 'data-post-number':`${posts[i].id}`});
-    $(`#post${i} #toggle-link`).attr({'id': `toggle-link${i}`, "data-index": `${i}`});
-    $(`#post${i} .reply-form-div`).attr("id", `reply-form-div${i}`);
+    $(`#post${posts[i].id} .title`).html(`${posts[i].title}`);
+    $(`#post${posts[i].id} .date`).html(`${date}`);
+    $(`#post${posts[i].id} .content`).html(`${posts[i].content}`);
+    $(`#post${posts[i].id} .comment-link`).attr({'id': `comment-link${posts[i].id}`, 'data-post-number': `${posts[i].id}`, 'href': `get_single/${posts[i].id}`});
+    $(`#post${posts[i].id} .reply`).attr({'id': `reply-link${posts[i].id}`, 'data-post-number':`${posts[i].id}`});
+    $(`#post${posts[i].id} #toggle-link`).attr({'id': `toggle-link${posts[i].id}`, "data-post-number": `${posts[i].id}`});
+    $(`#post${posts[i].id} .reply-form-div`).attr("id", `reply-form-div${posts[i].id}`);
 }
 
 function addEventHanldersForNewLinks(){
@@ -77,68 +79,62 @@ function setPreviousLinkDisplay(skip){
     if(skip == 0){
         $("#previous-ten").addClass("hidden");
     }
-
+    $("#previous-ten").attr("data-skip", skip);
 }
 
-function setNextLinkDisplay(posts){
+function setNextLinkDisplay(posts, object){
     if(posts.length < 10 || posts[9].id == 1){
         $("#next-ten").addClass("hidden");
     }
+    $("#next-ten").attr("data-skip", object.skip);
+}
+
+function setRulesOnPreviousLinkClick(object){
+    if(object.skip == 0){
+        $("#previous-ten").addClass("hidden");
+    }
+    $("#next-ten").removeClass("hidden");
+    $("#previous-ten").attr("data-skip", object.skip);
+    $(`#ten-posts${object.skip + 10}`).remove();
+    $(`#ten-posts${object.skip}`).css("display","");
 }
 
 // single post comment section build out starts here
 
-function getSinglePostComments(id, index){
-    $.ajax("/get_single/"+id)
-
-        .then(result => {
-            if(result.length == 0){
-                throw new Error("This post has no comments");
-            }
-            tearDownAndSetUpCommentSecion(index);
-            addHideCommentLink(index);
-            parseComments(index, result)
-        })
-        .catch(error => console.error(`An error occurred: ${error}`));
-}
-
-function tearDownAndSetUpCommentSecion(index){
-
-    $(`#comments${index}`).remove();
+function tearDownAndSetUpCommentSecion(object){
+    $(`#comments${object.postNumber}`).remove();
     const newComments = $(".comments-template").clone();
-    newComments.attr("id", `comments${index}`);
+    newComments.attr("id", `comments${object.postNumber}`);
     newComments.removeClass("comments-template").addClass(`comments`);
     newComments.css("display","");
-    $(`#post${index}`).append(newComments);
+    $(`#post${object.postNumber}`).append(newComments);
 }
 
-function addHideCommentLink(index){
-    $(`#toggle-link${index}`).css("display","");
-
+function addHideCommentLink(object){
+    $(`#toggle-link${object.postNumber}`).css("display","");
 }
 
-function parseComments(index, comments){
+function parseComments(object, comments){
     for(var i = 0; i < comments.length; i++){
-        renderCommentsHTML(comments, index, i);
+        renderCommentsHTML(object, comments, i);
     }
 }
 
-function renderCommentsHTML(comments, index, i){
-    const newComment = $(`#comments${index} .comment-template`).clone();
+function renderCommentsHTML(object, comment, i){
+    const newComment = $(`.comment-template`).clone();
     newComment.removeClass("comment-template").addClass(`comment`);
-    newComment.attr("id", `comment${index}-${i}`);
+    newComment.attr("id", `comment${comment[i].id}`);
     newComment.css("display","");
-    $(`#comments${index}`).append(newComment);
-    const date = new Date(comments[i].created_at).toLocaleString();
-    $(`#comment${index}-${i} .comment-date`).html(date);
-    $(`#comment${index}-${i} .comment-content`).html(comments[i].content);
+    $(`#comments${object.postNumber}`).append(newComment);
+    const date = new Date(comment[i].created_at).toLocaleString();
+    $(`#comment${comment[i].id} .comment-date`).html(date);
+    $(`#comment${comment[i].id} .comment-content`).html(comment[i].content);
 }
 
 // add new post functions begins here
 
 $("#post-form").submit(function(e){
     e.preventDefault();
-    
     validatePostInputs();
 })
 
@@ -164,7 +160,6 @@ function validatePostInputs(){
 
 function convertPostDataToJSON(title, content){
     const post = JSON.stringify({"title":title, "content": content});
-    
     sendPost(post);
 }
 
@@ -176,67 +171,67 @@ function sendPost(post){
     })
         .then(() =>{
             $("#post-form").trigger("reset");
-            getTenPosts(0)
+            getPost(object = {dataID: "posts", dataClass: "post-link", "href": "/get_post", "skip": 0})
         })
         .catch(error => {console.error("An error occurred: ", error.statusText)});
 }
 
 // reply form and adding comments to single posts begin here
 
-function renderReplyFormHTML(index, id){
+function renderReplyFormHTML(object){
     $(".reply-form-div").html("");
     newReplyForm = $(".reply-form-template").clone();
     newReplyForm.removeClass("reply-form-template").addClass("reply-form");
-    newReplyForm.attr("id", `reply-form${index}`);
+    newReplyForm.attr("id", `reply-form${object.postNumber}`);
     newReplyForm.css("display","");
-    $(`#reply-form-div${index}`).append(newReplyForm);
-    $(`#reply-form${index} #comment-id`).val(`${id}`);
-    $(`#reply-form${index} #reply-button`).attr("id", `reply-button${index}`);
-    $(`#reply-form${index} #cancel-button`).attr("id", `cancel-button${index}`);
+    $(`#reply-form-div${object.postNumber}`).append(newReplyForm);
+    $(`#reply-form${object.postNumber} #comment-id`).val(`${object.postNumber}`);
+    $(`#reply-form${object.postNumber} #reply-button`).attr("id", `reply-button${object.postNumber}`);
+    $(`#reply-form${object.postNumber} #cancel-button`).attr("id", `cancel-button${object.postNumber}`);
     
-    createReplyListener(index);
-    createCommentCancelListener(index);
+    createReplyListener(object.postNumber);
+    createCommentCancelListener(object.postNumber);
 }
 
-function createReplyListener(index){
-    $(`#reply-form${index}`).submit(function(e){
+function createReplyListener(postNumber){
+    $(`#reply-form${postNumber}`).submit(function(e){
         e.preventDefault();
-        validateCommentInput(index);
+        validateCommentInput(postNumber);
     })
 }
 
-function validateCommentInput(index){
-    const content = $(`#reply-form${index} #reply`).val().trim();
+function validateCommentInput(postNumber){
+    const content = $(`#reply-form${postNumber} #reply`).val().trim();
     if(content == ""){
-        $(`#reply-form${index} #reply`).val("");
-        $(`#reply-form${index} #reply`).focus();
+        $(`#reply-form${postNumber} #reply`).val("");
+        $(`#reply-form${postNumber} #reply`).focus();
         
         return false;
     }  
-    convertCommentDataToJSON(content, index);
+    convertCommentDataToJSON(content, postNumber);
 }
 
-function convertCommentDataToJSON(content, index){
-    const commentId = $(`#reply-form${index} #comment-id`).val();
+function convertCommentDataToJSON(content, postNumber){
+    const commentId = $(`#reply-form${postNumber} #comment-id`).val();
     const comment = JSON.stringify({"content":content, "comment_id": commentId});
-    sendComment(comment, index);
+    sendComment(comment, postNumber);
 }
 
-function sendComment(comment, index){
+function sendComment(comment, postNumber){
     $.ajax("/create_comment",{
         type: 'POST',
         contentType: 'application/json',
         data: comment
     })
         .then(result => {
-            $(`#reply-form${index} #reply`).val("");
-            getSinglePostComments(result, index)
+            $(`#reply-form${postNumber} #reply`).val("");
+            getPost(object = {"postNumber": postNumber, "dataClass": "comment", "href": `get_single/${result}`, "skip": 0})
         })
         .catch(error => console.error("An error occurred: ", error.statusText));
 }
 
-function createCommentCancelListener(index){
-    $(`#cancel-button${index}`).click(function(e){
+function createCommentCancelListener(postNumber){
+    $(`#cancel-button${postNumber}`).click(function(e){
         e.preventDefault();
         $(".reply-form").remove();
     })
