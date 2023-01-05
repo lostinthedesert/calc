@@ -46,19 +46,9 @@ def create_post(db: Session=Depends(get_db), limit: int=10, skip: int=0):
 
 # GET ONE POST
 @app.get("/get_single/{id}", response_model=List[schemas.ReturnPost])
-def create_post(id: int, db: Session=Depends(get_db)):
-    post=db.query(models.Posts).filter(models.Posts.comment_id==id).order_by(models.Posts.created_at.desc()).all()
+def create_post(id: int, db: Session=Depends(get_db), skip: int=0):
+    post=db.query(models.Posts).filter(models.Posts.comment_id==id).order_by(models.Posts.created_at.desc()).offset(skip).all()
     return post
-
-@app.get("/air_quality")
-def air_quality():
-    with open("../aqi2.csv", 'r') as f:
-            reader = csv.DictReader(f)
-            items = list(reader)
-            f.close()
-    items.reverse()
-    del items[49:]
-    return items
 
 # CREATE POST
 @app.post("/create_post")
@@ -86,3 +76,13 @@ def create_comment(comment: schemas.CreateComment, db: Session=Depends(get_db)):
     new_comment=db.query(models.Posts).filter(models.Posts.id==new_comment.id).first()
     print(new_comment.content)
     return new_comment.comment_id
+
+@app.get("/air_quality")
+def air_quality():
+    with open("../aqi2.csv", 'r') as f:
+            reader = csv.DictReader(f)
+            items = list(reader)
+            f.close()
+    items.reverse()
+    del items[49:]
+    return items
