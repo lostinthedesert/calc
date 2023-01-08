@@ -2,7 +2,7 @@
 
 // display posts functions begin here
 
-function getPost(object = {dataID: "posts", dataClass: "post-link", "skip": 0}){
+function getPost(object = {dataID: "posts", dataClass: "post-link", href: "get_post", "skip": 0}){
     $.ajax(`${object.href}?skip=${object.skip}`)
     
         .then(result => {
@@ -31,7 +31,7 @@ function getPost(object = {dataID: "posts", dataClass: "post-link", "skip": 0}){
 function hideAndDisplayPages(object){
     $(".selected").removeClass("selected");
     $(`.${object.dataID}`).addClass("selected");
-    $(".ten-posts").remove();
+    $(".ten-posts").css("display", "none");
 }
 
 function tearDownPostsAndResetSkipLinks(object){
@@ -95,7 +95,7 @@ function setRulesOnPreviousLinkClick(object){
     }
     $("#next-ten").removeClass("hidden");
     $("#previous-ten").attr("data-skip", object.skip);
-    $(`#ten-posts${object.skip + 10}`).remove();
+    $(".ten-posts").css("display", "none");
     $(`#ten-posts${object.skip}`).css("display","");
 }
 
@@ -169,9 +169,31 @@ function sendPost(post){
         contentType:'application/json',
         data: post
     })
-        .then(() =>{
+        .then(result =>{
             $("#post-form").trigger("reset");
-            getPost(object = {dataID: "posts", dataClass: "post-link", "href": "/get_post", "skip": 0})
+            // $("#posts-link").click();
+            const newBorder = $(".clone-border").clone();
+            newBorder.removeClass("clone-border").addClass("border");
+            newBorder.css("display", "");
+            const newPost = $(".top-post-clone").clone();
+            newPost.attr("id", `post${result.id}`);
+            newPost.removeClass("top-post-clone").addClass(`top-post`);
+            newPost.css("display","");
+            $(`#ten-posts0`).prepend(newPost);
+            $(`#ten-posts0`).prepend(newBorder);
+            const date = new Date(result.created_at).toLocaleString();
+            $(`#post${result.id} .title`).html(`${result.title}`);
+            $(`#post${result.id} .date`).html(date);
+            $(`#post${result.id} .content`).html(`${result.content}`);
+            $(`#post${result.id} .comment-link`).attr({'id': `comment-link${result.id}`, 'data-post-number': `${result.id}`, 'href': `get_single/${result.id}`});
+            $(`#post${result.id} .reply`).attr({'id': `reply-link${result.id}`, 'data-post-number':`${result.id}`});
+            $(`#post${result.id} #toggle-link`).attr({'id': `toggle-link${result.id}`, "data-post-number": `${result.id}`});
+            $(`#post${result.id} .reply-form-div`).attr("id", `reply-form-div${result.id}`);
+            $(".ten-posts").css("display", "none");
+            $("#ten-posts0").css("display", "");
+            $(`#comment-link${result.id}`).click(buildElementObject);
+            $(`#reply-link${result.id}`).click(buildElementObject);
+            $(`#toggle-link${result.id}`).click(buildElementObject);
         })
         .catch(error => {console.error("An error occurred: ", error.statusText)});
 }

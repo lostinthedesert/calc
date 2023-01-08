@@ -25,11 +25,12 @@ function add_rows_to_aqi_table(data){
 function render_aqi_tables_template(data, i){
     
     var newRow = $(".row-template").clone();
-    newRow.removeClass("row-template").addClass(`row-template${i}`);
+    newRow.removeClass("row-template").addClass("row");
+    newRow.attr("id", `row${i}`);
     newRow.css("display", "");
     $("#aqi-table").append(newRow);
-    $(`.row-template${i} > .col1`).html(`${data[i].date} ${data[i].time}:00`);
-    $(`.row-template${i} > .col2`).html(`${data[i].city}, ${data[i].state}`);
-    $(`.row-template${i} > .col3`).html(`${data[i].aqi}`);
-    $(`.row-template${i} > .col4`).html(`${data[i].category}`);
+    $(`#row${i} > .col1`).html(`${data[i].date} ${data[i].time}:00`);
+    $(`#row${i} > .col2`).html(`${data[i].city}, ${data[i].state}`);
+    $(`#row${i} > .col3`).html(`${data[i].aqi}`);
+    $(`#row${i} > .col4`).html(`${data[i].category}`);
 }
