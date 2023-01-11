@@ -1,39 +1,65 @@
 $(document).ready(function() {
+
+    skip = 0;
+
+    const hash = location.hash.slice(1);
+    console.log(hash)
+    if(hash == "get_post"){
+        // $(".selected").removeClass("selected");
+        // $(`.posts`).addClass("selected");
+        getPost();
+    }
+    if(hash == "getAirQuality"){
+        // $(".selected").removeClass("selected");
+        // $(`.posts`).addClass("selected");
+        getAirQuality();
+    }
+
     $("a").click(buildElementObject);
 
-    // window.onpopstate = (e) => {
-    //     if(e.state){
-    //         // const object = e.state;
-    //         console.log(e.state);
-    //         if(e.state.dataClass == "next-ten"){
+    window.onpopstate = (e) => {
+        if(e.state){
+            e.state.isPop = true;
+            console.log(e.state);
+            runSwitchStatement(e.state);
+    //         if(e.state.dataClass == "home-link"){
     //             $(".selected").removeClass("selected");
-    //             $(`.${e.state.dataID}`).addClass("selected");
-    //             $(`#ten-posts${e.state.skip}`).css("display", "");
-    //             $(`#ten-posts${e.state.skip+10}`).css("display", "none");
-    //         }
-    //         if(e.state.dataClass == "previous-ten"){
-    //             $(".selected").removeClass("selected");
-    //             $(`.${e.state.dataID}`).addClass("selected");
-    //             getPost(e.state);
+    //             $(`.calculator`).addClass("selected");
     //         }
     //         if(e.state.dataClass == "post-link"){
     //             $(".selected").removeClass("selected");
-    //             $(`.${e.state.dataID}`).addClass("selected");
-    //             $(`#ten-posts${e.state.skip}`).css("display", "");
-    //             $(`#ten-posts${e.state.skip+10}`).css("display", "none");
+    //             $(`.posts`).addClass("selected");
+    //             $(`.ten-posts`).css("display", "none");
+    //             $(`#ten-posts0`).css("display", "");
     //             $("#previous-ten").addClass("hidden");
-    //         }
+    //         }    
     //         if(e.state.dataClass == "air-quality-link"){
     //             $(".selected").removeClass("selected");
-    //             $(`.${e.state.dataID}`).addClass("selected");
+    //             $(`.air-quality`).addClass("selected");
     //         }
-    //         if(e.state.dataClass == "home-link"){
+    //         if(e.state.dataClass == "next-ten"){
     //             $(".selected").removeClass("selected");
-    //             $(`.${e.state.dataID}`).addClass("selected");
+    //             $(`.posts`).addClass("selected");
+    //             $(`.ten-posts`).css("display", "none");
+    //             $(`#ten-posts${e.state.skip}`).css("display", "");
+
     //         }
-    //     }
-    // }
+    //         if(e.state.dataClass == "previous-ten"){
+    //             $(".selected").removeClass("selected");
+    //             $(`.posts`).addClass("selected");
+    //             $(`.ten-posts`).css("display", "none");
+    //             $(`#ten-posts${e.state.skip}`).css("display", "");
+    //             $("#previous-ten").removeClass("hidden");
+    //         }  
+        }
+    }
 })
+
+// $(window).on("unload", function(){
+//     const hash = window.location.prop('hash');
+//     console.log(hash);
+//     console.log("unload event triggered");
+// })
 
 function buildElementObject(e){
     e.preventDefault();
@@ -44,9 +70,9 @@ function buildElementObject(e){
         "dataClass": $(this).data("class"),
         "href": $(this).attr("href"),
         "postNumber": $(this).data("post-number"),
-        "skip": $(this).data("skip")
+        "skip": $(this).data("skip"),
+        "isPop": false
     }
-    console.log(elementObject);
     runSwitchStatement(elementObject);
     
     // window.location.hash = "";
@@ -59,7 +85,9 @@ function buildElementObject(e){
 function runSwitchStatement(object){
     switch(object.dataClass){
         case "home-link":
-            updatePushState(object);
+            if(!object.isPop){
+                updatePushState(object);
+            }
             resetCalculatorAndPostForms(object);
             break;
         case "post-link":
@@ -67,51 +95,49 @@ function runSwitchStatement(object){
             object.skip = skip;
             let postLoaded = $(`#ten-posts0`).attr("class");
             if(postLoaded){
-                $(".selected").removeClass("selected");
-                $(`.posts`).addClass("selected");
-                $("#previous-ten").addClass("hidden");
-                $(".ten-posts").css("display", "none");
-                $("#ten-posts0").css("display", "");
+                runDOMRoutineForPosts();
             }
             else{
                 getPost(object);
             }
-            updatePushState(object);
+            if(!object.isPop){
+                updatePushState(object);
+            }
             break;
         case "next-ten":
             skip += 10;
             object.skip = skip;
             let nextLoaded = $(`#ten-posts${object.skip}`).attr("class");
             if(nextLoaded){
-                $(".ten-posts").css("display", "none");
-                $(`#ten-posts${object.skip}`).css("display", "");
-                $(".hidden").removeClass("hidden");
+                runDOMRoutineForNext(object);
             }
             else{
                 getPost(object);
             }
-            updatePushState(object);
+            if(!object.isPop){
+                updatePushState(object);
+            }
             break;
         case "previous-ten":
             skip -= 10;
             object.skip = skip;
-            updatePushState(object);
+            console.log(object);
+            if(!object.isPop){
+                updatePushState(object);
+            }
             setRulesOnPreviousLinkClick(object);          
             break;
         case "comment":
             object.skip = 0;
             let commentsLoaded = $(`#comments${object.postNumber}`).attr("class");
             if(commentsLoaded){
-                $(`#comments${object.postNumber}`).css("display","");
-                $(`#toggle-link${object.postNumber}`).css("display","");
+                runDOMRoutineForComments(object);
             }
             else{
                 getPost(object);
             }
-            updatePushState(object);
             break;
         case "reply":
-            updatePushState(object);
             renderReplyFormHTML(object);
             break;
         case "toggle":
@@ -121,13 +147,14 @@ function runSwitchStatement(object){
         case "air-quality-link":
             let aqiLoaded = $(`#row0`).attr("class");
             if(aqiLoaded){
-                $(".selected").removeClass("selected");
-                $(`.air-quality`).addClass("selected");
+                runDOMRoutineForAQI();
             }
             else{
-                get_air_quality(object);
+                getAirQuality(object);
             }
-            updatePushState(object);
+            if(!object.isPop){
+                updatePushState(object);
+            }
     }
 }
 
@@ -136,6 +163,31 @@ function resetCalculatorAndPostForms(object){
     $("#calculator-form").trigger("reset");
     $("#post-form").trigger("reset");
     hideAndDisplayPages(object);
+}
+
+function runDOMRoutineForPosts(){
+    $(".selected").removeClass("selected");
+    $(`.posts`).addClass("selected");
+    $("#previous-ten").addClass("hidden");
+    $(".ten-posts").css("display", "none");
+    $("#ten-posts0").css("display", "");
+}
+
+function runDOMRoutineForNext(object){
+    $(".ten-posts").css("display", "none");
+    $(`#ten-posts${object.skip}`).css("display", "");
+    $("#previous-ten").removeClass("hidden");
+    $(".skip-links").attr("data-skip", object.skip);
+}
+
+function runDOMRoutineForComments(object){
+    $(`#comments${object.postNumber}`).css("display","");
+    $(`#toggle-link${object.postNumber}`).css("display","");
+}
+
+function runDOMRoutineForAQI(){
+    $(".selected").removeClass("selected");
+    $(`.air-quality`).addClass("selected");
 }
 
 $("#calculator-form").submit(function(e){
@@ -152,7 +204,8 @@ $("#calculator-form").submit(function(e){
 })
 
 function updatePushState(obj){
-    window.history.pushState(obj, "", "");
+    const url = `#${obj.href}`;
+    window.history.pushState(obj, "", url);
 }
 
 

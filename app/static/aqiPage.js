@@ -1,4 +1,4 @@
-function get_air_quality(object = {"dataID": "air-quality"}){
+function getAirQuality(object = {"dataID": "air-quality"}){
     $.ajax("/air_quality")
     
     .then(result => {

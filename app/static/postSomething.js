@@ -3,6 +3,7 @@
 // display posts functions begin here
 
 function getPost(object = {dataID: "posts", dataClass: "post-link", href: "get_post", "skip": 0}){
+    console.log(object);
     $.ajax(`${object.href}?skip=${object.skip}`)
     
         .then(result => {
@@ -10,6 +11,10 @@ function getPost(object = {dataID: "posts", dataClass: "post-link", href: "get_p
                 hideAndDisplayPages(object);
                 }
             if(object.dataClass != "comment"){
+                if(result.length == 0){
+                    $("#next-ten").addClass("hidden");
+                    throw new Error("There are no more posts");
+                }
                 tearDownPostsAndResetSkipLinks(object);
                 parseTenPosts(result, object);
                 addEventHanldersForNewLinks();
@@ -37,7 +42,8 @@ function hideAndDisplayPages(object){
 function tearDownPostsAndResetSkipLinks(object){
     const newTenPosts = $(".ten-posts-template").clone();
     newTenPosts.attr({"id": `ten-posts${object.skip}`, "class": "ten-posts", "style": "display:"})
-    $(`#ten-posts${object.skip - 10}`).css("display","none");
+    $(".ten-posts").css("display", "none");
+    // $(`#ten-posts${object.skip - 10}`).css("display","none");
     const referenceDiv = $("#skip-links");
     newTenPosts.insertBefore(referenceDiv);
     $(".hidden").removeClass("hidden");
@@ -94,7 +100,7 @@ function setRulesOnPreviousLinkClick(object){
         $("#previous-ten").addClass("hidden");
     }
     $("#next-ten").removeClass("hidden");
-    $("#previous-ten").attr("data-skip", object.skip);
+    $(".skip-links").attr("data-skip", object.skip);
     $(".ten-posts").css("display", "none");
     $(`#ten-posts${object.skip}`).css("display","");
 }
