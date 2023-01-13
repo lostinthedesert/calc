@@ -87,3 +87,4 @@ def air_quality():
     items.reverse()
     del items[49:]
     return items
+

@@ -1,18 +1,55 @@
 $(document).ready(function() {
 
-    skip = 0;
+    if(!location.hash){
+        const object = {
+            dataID: "calculator",
+            dataClass: "home-link",
+            href: "home"
+        }
+        updatePushState(object);
+    }
 
     const hash = location.hash.slice(1);
-    console.log(hash)
+    const newHash = hash.slice(0, 13);
+    const skipHash = hash.slice(-2);
+    if(hash == "home"){
+        const object = {
+            dataID: "calculator",
+            dataClass: "home-link",
+            href: "home"
+        }
+        updatePushState(object);
+    }
     if(hash == "get_post"){
-        // $(".selected").removeClass("selected");
-        // $(`.posts`).addClass("selected");
+        skip = 0;
+        const object = {
+            dataID: "posts", 
+            dataClass: "post-link", 
+            href: "get_post", 
+            skip: 0
+        }
         getPost();
+        updatePushState(object);
     }
     if(hash == "getAirQuality"){
-        // $(".selected").removeClass("selected");
-        // $(`.posts`).addClass("selected");
+        const object = {
+            dataID: "air-quality",
+            href: "getAirQuality",
+            dataClass: "air-quality-link"
+        }
         getAirQuality();
+        updatePushState(object);
+    }
+    if(newHash == "get_post?skip"){
+        skip = parseInt(skipHash);
+        const object = {
+            "href": hash,
+            "dataID": "posts",
+            "dataClass": "post-link",
+            "skip": skip
+        }
+        getPost(object);
+        updatePushState(object);
     }
 
     $("a").click(buildElementObject);
@@ -22,44 +59,18 @@ $(document).ready(function() {
             e.state.isPop = true;
             console.log(e.state);
             runSwitchStatement(e.state);
-    //         if(e.state.dataClass == "home-link"){
-    //             $(".selected").removeClass("selected");
-    //             $(`.calculator`).addClass("selected");
-    //         }
-    //         if(e.state.dataClass == "post-link"){
-    //             $(".selected").removeClass("selected");
-    //             $(`.posts`).addClass("selected");
-    //             $(`.ten-posts`).css("display", "none");
-    //             $(`#ten-posts0`).css("display", "");
-    //             $("#previous-ten").addClass("hidden");
-    //         }    
-    //         if(e.state.dataClass == "air-quality-link"){
-    //             $(".selected").removeClass("selected");
-    //             $(`.air-quality`).addClass("selected");
-    //         }
-    //         if(e.state.dataClass == "next-ten"){
-    //             $(".selected").removeClass("selected");
-    //             $(`.posts`).addClass("selected");
-    //             $(`.ten-posts`).css("display", "none");
-    //             $(`#ten-posts${e.state.skip}`).css("display", "");
-
-    //         }
-    //         if(e.state.dataClass == "previous-ten"){
-    //             $(".selected").removeClass("selected");
-    //             $(`.posts`).addClass("selected");
-    //             $(`.ten-posts`).css("display", "none");
-    //             $(`#ten-posts${e.state.skip}`).css("display", "");
-    //             $("#previous-ten").removeClass("hidden");
-    //         }  
+        }
+        else{
+            console.log('popstate fired but no state object');
         }
     }
 })
 
-// $(window).on("unload", function(){
-//     const hash = window.location.prop('hash');
-//     console.log(hash);
-//     console.log("unload event triggered");
-// })
+function updatePushState(obj){
+    const url = `#${obj.href}`;
+    window.history.pushState(obj, "", url);
+}
+
 
 function buildElementObject(e){
     e.preventDefault();
@@ -94,7 +105,7 @@ function runSwitchStatement(object){
             skip = 0;
             object.skip = skip;
             let postLoaded = $(`#ten-posts0`).attr("class");
-            if(postLoaded){
+            if(postLoaded && !object.newPost){
                 runDOMRoutineForPosts();
             }
             else{
@@ -105,25 +116,39 @@ function runSwitchStatement(object){
             }
             break;
         case "next-ten":
-            skip += 10;
-            object.skip = skip;
+            if(!object.isPop){
+                skip += 10;
+                object.skip = skip;
+                object.href = `get_post?skip=${skip}`;
+                updatePushState(object);
+            } 
+            else{
+                skip = object.skip;
+            }
             let nextLoaded = $(`#ten-posts${object.skip}`).attr("class");
             if(nextLoaded){
-                runDOMRoutineForNext(object);
+                runDOMRoutineForSkip(object);
             }
             else{
                 getPost(object);
             }
-            if(!object.isPop){
-                updatePushState(object);
-            }
             break;
         case "previous-ten":
-            skip -= 10;
-            object.skip = skip;
-            console.log(object);
             if(!object.isPop){
+                skip -= 10;
+                object.skip = skip;
+                object.href = `get_post?skip=${skip}`;
                 updatePushState(object);
+            }
+            else{
+                skip = object.skip;
+            }
+            let previousLoaded = $(`#ten-posts${object.skip}`).attr("class");
+            if(previousLoaded){
+                runDOMRoutineForSkip(object);
+            }
+            else{
+                getPost(object);
             }
             setRulesOnPreviousLinkClick(object);          
             break;
@@ -173,11 +198,20 @@ function runDOMRoutineForPosts(){
     $("#ten-posts0").css("display", "");
 }
 
-function runDOMRoutineForNext(object){
+function runDOMRoutineForSkip(object){
+    $(".selected").removeClass("selected");
+    $(`.posts`).addClass("selected");
     $(".ten-posts").css("display", "none");
     $(`#ten-posts${object.skip}`).css("display", "");
-    $("#previous-ten").removeClass("hidden");
+    if(object.ID == "previous-ten"){
+        $("#next-ten").removeClass("hidden");
+    }
+    else{
+        $("#previous-ten").removeClass("hidden");
+    }
+    // $("#previous-ten").removeClass("hidden");
     $(".skip-links").attr("data-skip", object.skip);
+    
 }
 
 function runDOMRoutineForComments(object){
@@ -203,10 +237,6 @@ $("#calculator-form").submit(function(e){
     $("#answer").html(answer);
 })
 
-function updatePushState(obj){
-    const url = `#${obj.href}`;
-    window.history.pushState(obj, "", url);
-}
 
 
 // see postSomething.js and aqiPage.js in this directory for all other switch statement endpoints

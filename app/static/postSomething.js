@@ -4,22 +4,23 @@
 
 function getPost(object = {dataID: "posts", dataClass: "post-link", href: "get_post", "skip": 0}){
     console.log(object);
-    $.ajax(`${object.href}?skip=${object.skip}`)
+    $.ajax(`${object.href}`)
     
         .then(result => {
-            if(object.dataClass == "post-link"){
-                hideAndDisplayPages(object);
-                }
+            // if(object.dataClass == "post-link"){
+            //     hideAndDisplayPages(object);
+            //     }
             if(object.dataClass != "comment"){
                 if(result.length == 0){
                     $("#next-ten").addClass("hidden");
                     throw new Error("There are no more posts");
                 }
+                hideAndDisplayPages(object);
                 tearDownPostsAndResetSkipLinks(object);
                 parseTenPosts(result, object);
                 addEventHanldersForNewLinks();
-                setPreviousLinkDisplay(object.skip);
-                setNextLinkDisplay(result, object);
+                setSkipLinkDisplay(result, object.skip);
+                setSkipLinkAttributes(object);
             }
             if(object.dataClass == "comment"){
                 if(result.length == 0){
@@ -81,28 +82,29 @@ function addEventHanldersForNewLinks(){
     $(".toggle-link").click(buildElementObject);
 }
 
-function setPreviousLinkDisplay(skip){
+function setSkipLinkDisplay(posts, skip){
     if(skip == 0){
         $("#previous-ten").addClass("hidden");
     }
-    $("#previous-ten").attr("data-skip", skip);
-}
-
-function setNextLinkDisplay(posts, object){
     if(posts.length < 10 || posts[9].id == 1){
         $("#next-ten").addClass("hidden");
     }
-    $("#next-ten").attr("data-skip", object.skip);
+}
+
+function setSkipLinkAttributes(object){
+    $(".skip-links").attr("data-skip", object.skip);
+    $(".skp-links").attr("href", `get_post?skip=${object.skip}`);
 }
 
 function setRulesOnPreviousLinkClick(object){
     if(object.skip == 0){
         $("#previous-ten").addClass("hidden");
     }
-    $("#next-ten").removeClass("hidden");
-    $(".skip-links").attr("data-skip", object.skip);
-    $(".ten-posts").css("display", "none");
-    $(`#ten-posts${object.skip}`).css("display","");
+    // $("#next-ten").removeClass("hidden");
+    $("#previous-ten").attr("href", `get_post?skip=${object.skip}`);
+    // $(".skip-links").attr("data-skip", object.skip);
+    // $(".ten-posts").css("display", "none");
+    // $(`#ten-posts${object.skip}`).css("display","");
 }
 
 // single post comment section build out starts here
@@ -176,30 +178,41 @@ function sendPost(post){
         data: post
     })
         .then(result =>{
-            $("#post-form").trigger("reset");
+            location = "#get_post";
+            location.reload();
+            // $("#post-form").trigger("reset");
+            // const object = {
+            //     dataID: "posts", 
+            //     dataClass: "post-link", 
+            //     href: "get_post?limit=11", 
+            //     skip: 0,
+            //     newPost: true
+            // };
+            // $("#ten-posts0").remove();
+            // runSwitchStatement(object);
             // $("#posts-link").click();
-            const newBorder = $(".clone-border").clone();
-            newBorder.removeClass("clone-border").addClass("border");
-            newBorder.css("display", "");
-            const newPost = $(".top-post-clone").clone();
-            newPost.attr("id", `post${result.id}`);
-            newPost.removeClass("top-post-clone").addClass(`top-post`);
-            newPost.css("display","");
-            $(`#ten-posts0`).prepend(newPost);
-            $(`#ten-posts0`).prepend(newBorder);
-            const date = new Date(result.created_at).toLocaleString();
-            $(`#post${result.id} .title`).html(`${result.title}`);
-            $(`#post${result.id} .date`).html(date);
-            $(`#post${result.id} .content`).html(`${result.content}`);
-            $(`#post${result.id} .comment-link`).attr({'id': `comment-link${result.id}`, 'data-post-number': `${result.id}`, 'href': `get_single/${result.id}`});
-            $(`#post${result.id} .reply`).attr({'id': `reply-link${result.id}`, 'data-post-number':`${result.id}`});
-            $(`#post${result.id} #toggle-link`).attr({'id': `toggle-link${result.id}`, "data-post-number": `${result.id}`});
-            $(`#post${result.id} .reply-form-div`).attr("id", `reply-form-div${result.id}`);
-            $(".ten-posts").css("display", "none");
-            $("#ten-posts0").css("display", "");
-            $(`#comment-link${result.id}`).click(buildElementObject);
-            $(`#reply-link${result.id}`).click(buildElementObject);
-            $(`#toggle-link${result.id}`).click(buildElementObject);
+            // const newBorder = $(".clone-border").clone();
+            // newBorder.removeClass("clone-border").addClass("border");
+            // newBorder.css("display", "");
+            // const newPost = $(".top-post-clone").clone();
+            // newPost.attr("id", `post${result.id}`);
+            // newPost.removeClass("top-post-clone").addClass(`top-post`);
+            // newPost.css("display","");
+            // $(`#ten-posts0`).prepend(newPost);
+            // $(`#ten-posts0`).prepend(newBorder);
+            // const date = new Date(result.created_at).toLocaleString();
+            // $(`#post${result.id} .title`).html(`${result.title}`);
+            // $(`#post${result.id} .date`).html(date);
+            // $(`#post${result.id} .content`).html(`${result.content}`);
+            // $(`#post${result.id} .comment-link`).attr({'id': `comment-link${result.id}`, 'data-post-number': `${result.id}`, 'href': `get_single/${result.id}`});
+            // $(`#post${result.id} .reply`).attr({'id': `reply-link${result.id}`, 'data-post-number':`${result.id}`});
+            // $(`#post${result.id} #toggle-link`).attr({'id': `toggle-link${result.id}`, "data-post-number": `${result.id}`});
+            // $(`#post${result.id} .reply-form-div`).attr("id", `reply-form-div${result.id}`);
+            // $(".ten-posts").css("display", "none");
+            // $("#ten-posts0").css("display", "");
+            // $(`#comment-link${result.id}`).click(buildElementObject);
+            // $(`#reply-link${result.id}`).click(buildElementObject);
+            // $(`#toggle-link${result.id}`).click(buildElementObject);
         })
         .catch(error => {console.error("An error occurred: ", error.statusText)});
 }
