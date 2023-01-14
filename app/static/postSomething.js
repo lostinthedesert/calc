@@ -7,9 +7,6 @@ function getPost(object = {dataID: "posts", dataClass: "post-link", href: "get_p
     $.ajax(`${object.href}`)
     
         .then(result => {
-            // if(object.dataClass == "post-link"){
-            //     hideAndDisplayPages(object);
-            //     }
             if(object.dataClass != "comment"){
                 if(result.length == 0){
                     $("#next-ten").addClass("hidden");
@@ -37,14 +34,13 @@ function getPost(object = {dataID: "posts", dataClass: "post-link", href: "get_p
 function hideAndDisplayPages(object){
     $(".selected").removeClass("selected");
     $(`.${object.dataID}`).addClass("selected");
-    $(".ten-posts").css("display", "none");
+    // $(".ten-posts").css("display", "none");
 }
 
 function tearDownPostsAndResetSkipLinks(object){
     const newTenPosts = $(".ten-posts-template").clone();
     newTenPosts.attr({"id": `ten-posts${object.skip}`, "class": "ten-posts", "style": "display:"})
     $(".ten-posts").css("display", "none");
-    // $(`#ten-posts${object.skip - 10}`).css("display","none");
     const referenceDiv = $("#skip-links");
     newTenPosts.insertBefore(referenceDiv);
     $(".hidden").removeClass("hidden");
@@ -93,18 +89,7 @@ function setSkipLinkDisplay(posts, skip){
 
 function setSkipLinkAttributes(object){
     $(".skip-links").attr("data-skip", object.skip);
-    $(".skp-links").attr("href", `get_post?skip=${object.skip}`);
-}
-
-function setRulesOnPreviousLinkClick(object){
-    if(object.skip == 0){
-        $("#previous-ten").addClass("hidden");
-    }
-    // $("#next-ten").removeClass("hidden");
-    $("#previous-ten").attr("href", `get_post?skip=${object.skip}`);
-    // $(".skip-links").attr("data-skip", object.skip);
-    // $(".ten-posts").css("display", "none");
-    // $(`#ten-posts${object.skip}`).css("display","");
+    $(".skip-links").attr("href", `get_post?skip=${object.skip}`);
 }
 
 // single post comment section build out starts here
@@ -180,39 +165,6 @@ function sendPost(post){
         .then(result =>{
             location = "#get_post";
             location.reload();
-            // $("#post-form").trigger("reset");
-            // const object = {
-            //     dataID: "posts", 
-            //     dataClass: "post-link", 
-            //     href: "get_post?limit=11", 
-            //     skip: 0,
-            //     newPost: true
-            // };
-            // $("#ten-posts0").remove();
-            // runSwitchStatement(object);
-            // $("#posts-link").click();
-            // const newBorder = $(".clone-border").clone();
-            // newBorder.removeClass("clone-border").addClass("border");
-            // newBorder.css("display", "");
-            // const newPost = $(".top-post-clone").clone();
-            // newPost.attr("id", `post${result.id}`);
-            // newPost.removeClass("top-post-clone").addClass(`top-post`);
-            // newPost.css("display","");
-            // $(`#ten-posts0`).prepend(newPost);
-            // $(`#ten-posts0`).prepend(newBorder);
-            // const date = new Date(result.created_at).toLocaleString();
-            // $(`#post${result.id} .title`).html(`${result.title}`);
-            // $(`#post${result.id} .date`).html(date);
-            // $(`#post${result.id} .content`).html(`${result.content}`);
-            // $(`#post${result.id} .comment-link`).attr({'id': `comment-link${result.id}`, 'data-post-number': `${result.id}`, 'href': `get_single/${result.id}`});
-            // $(`#post${result.id} .reply`).attr({'id': `reply-link${result.id}`, 'data-post-number':`${result.id}`});
-            // $(`#post${result.id} #toggle-link`).attr({'id': `toggle-link${result.id}`, "data-post-number": `${result.id}`});
-            // $(`#post${result.id} .reply-form-div`).attr("id", `reply-form-div${result.id}`);
-            // $(".ten-posts").css("display", "none");
-            // $("#ten-posts0").css("display", "");
-            // $(`#comment-link${result.id}`).click(buildElementObject);
-            // $(`#reply-link${result.id}`).click(buildElementObject);
-            // $(`#toggle-link${result.id}`).click(buildElementObject);
         })
         .catch(error => {console.error("An error occurred: ", error.statusText)});
 }

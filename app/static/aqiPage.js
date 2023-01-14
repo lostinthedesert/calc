@@ -33,4 +33,8 @@ function render_aqi_tables_template(data, i){
     $(`#row${i} > .col2`).html(`${data[i].city}, ${data[i].state}`);
     $(`#row${i} > .col3`).html(`${data[i].aqi}`);
     $(`#row${i} > .col4`).html(`${data[i].category}`);
+
+    if((data[i].category) == "Hazardous"){
+        $(`#row${i} > .col4`).css("color", "red");
+    }
 }
