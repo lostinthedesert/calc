@@ -9,47 +9,49 @@ $(document).ready(function() {
         updatePushState(object);
     }
 
-    const hash = location.hash.slice(1);
-    const newHash = hash.slice(0, 13);
-    const skipHash = hash.slice(-2);
-    if(hash == "home"){
-        const object = {
-            dataID: "calculator",
-            dataClass: "home-link",
-            href: "home"
+    else{
+        const hash = location.hash.slice(1);
+        const newHash = hash.slice(0, 13);
+        const skipHash = hash.slice(-2);
+        if(hash == "home"){
+            const object = {
+                dataID: "calculator",
+                dataClass: "home-link",
+                href: "home"
+            }
+            updatePushState(object);
         }
-        updatePushState(object);
-    }
-    if(hash == "get_post"){
-        skip = 0;
-        const object = {
-            dataID: "posts", 
-            dataClass: "post-link", 
-            href: "get_post", 
-            skip: 0
+        if(hash == "get_post"){
+            skip = 0;
+            const object = {
+                dataID: "posts", 
+                dataClass: "post-link", 
+                href: "get_post", 
+                skip: 0
+            }
+            getPost();
+            updatePushState(object);
         }
-        getPost();
-        updatePushState(object);
-    }
-    if(hash == "getAirQuality"){
-        const object = {
-            dataID: "air-quality",
-            href: "getAirQuality",
-            dataClass: "air-quality-link"
+        if(hash == "getAirQuality"){
+            const object = {
+                dataID: "air-quality",
+                href: "getAirQuality",
+                dataClass: "air-quality-link"
+            }
+            getAirQuality();
+            updatePushState(object);
         }
-        getAirQuality();
-        updatePushState(object);
-    }
-    if(newHash == "get_post?skip"){
-        skip = parseInt(skipHash);
-        const object = {
-            "href": hash,
-            "dataID": "posts",
-            "dataClass": "post-link",
-            "skip": skip
+        if(newHash == "get_post?skip"){
+            skip = parseInt(skipHash);
+            const object = {
+                "href": hash,
+                "dataID": "posts",
+                "dataClass": "post-link",
+                "skip": skip
+            }
+            getPost(object);
+            updatePushState(object);
         }
-        getPost(object);
-        updatePushState(object);
     }
 
     $("a").click(buildElementObject);
@@ -84,13 +86,7 @@ function buildElementObject(e){
         "skip": $(this).data("skip"),
         "isPop": false
     }
-    runSwitchStatement(elementObject);
-    
-    // window.location.hash = "";
-    // const url = window.location + `${elementObject.href}`;
-    // window.history.pushState(elementObject, "", url);
-    // window.location.hash = `${elementObject.href}`;
-    
+    runSwitchStatement(elementObject);    
 }
 
 function runSwitchStatement(object){
@@ -149,8 +145,7 @@ function runSwitchStatement(object){
             }
             else{
                 getPost(object);
-            }
-            setRulesOnPreviousLinkClick(object);          
+            }         
             break;
         case "comment":
             object.skip = 0;
@@ -203,15 +198,36 @@ function runDOMRoutineForSkip(object){
     $(`.posts`).addClass("selected");
     $(".ten-posts").css("display", "none");
     $(`#ten-posts${object.skip}`).css("display", "");
+    if(fullTenPosts(object)){
+        $("#next-ten").removeClass("hidden");
+    }
+    else{
+        $("#next-ten").addClass("hidden");
+    }
     if(object.ID == "previous-ten"){
         $("#next-ten").removeClass("hidden");
     }
     else{
         $("#previous-ten").removeClass("hidden");
     }
-    // $("#previous-ten").removeClass("hidden");
+    if(object.skip == 0){
+        $("#previous-ten").addClass("hidden");
+    }
     $(".skip-links").attr("data-skip", object.skip);
+    $(".skip-links").attr("href", `get_post?skip=${object.skip}`);
     
+}
+
+function fullTenPosts(object){
+    const topPostChildren = $(`#ten-posts${object.skip}`).children(".top-post");
+    const topPostLength = topPostChildren.length;
+    const topPostEnd = topPostChildren.last().attr("id");
+    if(topPostLength < 10 || topPostEnd == "post1"){
+        return false;
+    }
+    else{
+        return true
+    }
 }
 
 function runDOMRoutineForComments(object){
