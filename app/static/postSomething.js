@@ -43,7 +43,7 @@ function tearDownPostsAndResetSkipLinks(object){
     $(".ten-posts").css("display", "none");
     const referenceDiv = $("#skip-links");
     newTenPosts.insertBefore(referenceDiv);
-    $(".hidden").removeClass("hidden");
+    $(".skip-links").removeClass("hidden");
 }
 
 function parseTenPosts(posts, object){

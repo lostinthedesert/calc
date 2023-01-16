@@ -138,3 +138,20 @@ th, td{
     padding: 5px;
 }
 
+#loader{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    border: 16px solid rgba(8, 163, 50,.4);
+    border-top: 16px solid rgba(8, 163, 50,.1); 
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin{
+    0% {trsnsform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
+  }
+

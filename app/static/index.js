@@ -1,11 +1,33 @@
 $(document).ready(function() {
 
+    getLoader(hashReader);    
+
+    $("a").click(buildElementObject);
+
+    window.onpopstate = (e) => {
+        if(e.state){
+            e.state.isPop = true;
+            console.log(e.state);
+            runSwitchStatement(e.state);
+        }
+        else{
+            console.log('popstate fired but no state object');
+        }
+    }
+})
+
+function updatePushState(obj){
+    const url = `#${obj.href}`;
+    window.history.pushState(obj, "", url);
+}
+
+var hashReader = function(){
     if(!location.hash){
         const object = {
             dataID: "calculator",
             dataClass: "home-link",
             href: "home"
-        }
+        } 
         updatePushState(object);
     }
 
@@ -53,26 +75,18 @@ $(document).ready(function() {
             updatePushState(object);
         }
     }
-
-    $("a").click(buildElementObject);
-
-    window.onpopstate = (e) => {
-        if(e.state){
-            e.state.isPop = true;
-            console.log(e.state);
-            runSwitchStatement(e.state);
-        }
-        else{
-            console.log('popstate fired but no state object');
-        }
-    }
-})
-
-function updatePushState(obj){
-    const url = `#${obj.href}`;
-    window.history.pushState(obj, "", url);
 }
 
+function getLoader(cbFunc){
+    $("#loader").removeClass("hidden");
+    setTimeout(doThis, 1200);
+    cbFunc();
+}
+
+function doThis(){
+    $("#loader").addClass("hidden");
+    $(".main").removeClass("hidden");
+}
 
 function buildElementObject(e){
     e.preventDefault();
