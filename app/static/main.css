@@ -139,9 +139,8 @@ th, td{
 }
 
 #loader{
-    position: absolute;
-    left: 50%;
-    top: 50%;
+    margin: auto;
+    margin-top: 150px;
     border: 16px solid rgba(8, 163, 50,.4);
     border-top: 16px solid rgba(8, 163, 50,.1); 
     border-radius: 50%;
@@ -155,3 +154,8 @@ th, td{
     100% {transform: rotate(360deg);}
   }
 
+/* Safari */
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
