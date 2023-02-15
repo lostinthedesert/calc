@@ -1,9 +1,8 @@
 // switch statement for links on this page and relevant variables are located in index.js in this directory
 
-// display posts functions begin here
+// display posts functions begin here. this is the procedure when the server is called for post (message board) data.
 
 function getPost(object = {dataID: "posts", dataClass: "post-link", href: "get_post", "skip": 0}){
-    console.log(object);
     $.ajax(`${object.href}`)
     
         .then(result => {
@@ -34,24 +33,27 @@ function getPost(object = {dataID: "posts", dataClass: "post-link", href: "get_p
 function hideAndDisplayPages(object){
     $(".selected").removeClass("selected");
     $(`.${object.dataID}`).addClass("selected");
-    // $(".ten-posts").css("display", "none");
 }
 
+// use the clone div from the source code to create a new element for each 10 posts requested. give unique ID to each new element based on the posts being displayed.
 function tearDownPostsAndResetSkipLinks(object){
     const newTenPosts = $(".ten-posts-template").clone();
     newTenPosts.attr({"id": `ten-posts${object.skip}`, "class": "ten-posts", "style": "display:"})
     $(".ten-posts").css("display", "none");
+    // insert new elements before the skip-links div. this ensures new elements are added to the end of the post section of the page as they are requested, not the top.
     const referenceDiv = $("#skip-links");
     newTenPosts.insertBefore(referenceDiv);
     $(".skip-links").removeClass("hidden");
 }
 
+// create elements for each post in a group of ten from json data received from server
 function parseTenPosts(posts, object){
     for(var i = 0; i < posts.length; i++){
         renderTenPostsHTML(i, posts, object);
     }
 }
 
+// assign identifying attributes to each new post element being added to the DOM and it's corresponding sub-links (comments, reply)
 function renderTenPostsHTML(i, posts, object){
     const newBorder = $(".clone-border").clone();
     newBorder.removeClass("clone-border").addClass("border");
@@ -72,6 +74,7 @@ function renderTenPostsHTML(i, posts, object){
     $(`#post${posts[i].id} .reply-form-div`).attr("id", `reply-form-div${posts[i].id}`);
 }
 
+//  this function will make sure our new links/click events are visible to the DOM
 function addEventHanldersForNewLinks(){
     $(".comment-link").click(buildElementObject);
     $(".reply").click(buildElementObject);
@@ -92,7 +95,7 @@ function setSkipLinkAttributes(object){
     $(".skip-links").attr("href", `get_post?skip=${object.skip}`);
 }
 
-// single post comment section build out starts here
+// single post comment section build out starts here. This is the procedure when the comment link is clicked for an individual post.
 
 function tearDownAndSetUpCommentSecion(object){
     $(`#comments${object.postNumber}`).remove();
@@ -124,13 +127,14 @@ function renderCommentsHTML(object, comment, i){
     $(`#comment${comment[i].id} .comment-content`).html(comment[i].content);
 }
 
-// add new post functions begins here
+// add new post functions begins here. Procedure to follow when a new post form is submitted
 
 $("#post-form").submit(function(e){
     e.preventDefault();
     validatePostInputs();
 })
 
+// make sure user's input meets criteria 
 function validatePostInputs(){
     const title = $("#title").val().trim();
     if(title == ""){
@@ -151,20 +155,22 @@ function validatePostInputs(){
     convertPostDataToJSON(title, content);
 }
 
+// if user's input is valid, convert to json object
 function convertPostDataToJSON(title, content){
     const post = JSON.stringify({"title":title, "content": content});
     sendPost(post);
 }
 
+// send POST request to server to add user's post to database and reload page to show new post
 function sendPost(post){
     $.ajax("/create_post",{
         type: 'POST',
         contentType:'application/json',
         data: post
     })
-        .then(result =>{
+        .then(() =>{
             location = "#get_post";
-            location.reload();
+            location.reload()
         })
         .catch(error => {console.error("An error occurred: ", error.statusText)});
 }
@@ -186,6 +192,7 @@ function renderReplyFormHTML(object){
     createCommentCancelListener(object.postNumber);
 }
 
+// create event listener for new reply button
 function createReplyListener(postNumber){
     $(`#reply-form${postNumber}`).submit(function(e){
         e.preventDefault();
@@ -193,6 +200,7 @@ function createReplyListener(postNumber){
     })
 }
 
+// see above for input validation explanation
 function validateCommentInput(postNumber){
     const content = $(`#reply-form${postNumber} #reply`).val().trim();
     if(content == ""){
@@ -223,6 +231,7 @@ function sendComment(comment, postNumber){
         .catch(error => console.error("An error occurred: ", error.statusText));
 }
 
+// create event listener for cancel comment button
 function createCommentCancelListener(postNumber){
     $(`#cancel-button${postNumber}`).click(function(e){
         e.preventDefault();

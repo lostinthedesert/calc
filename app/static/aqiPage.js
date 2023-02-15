@@ -9,14 +9,14 @@ function getAirQuality(object = {"dataID": "air-quality"}){
         console.error(`There was an error: ${error}`));
 }
 
+// clear any existing table and clone new header and row elements
 function add_rows_to_aqi_table(data){
     const tableHeader = $("#table-header").clone();
     const rowTemplate = $(".row-template").clone();
     $("#aqi-table").html("");
     $("#aqi-table").append(tableHeader);
     $("#aqi-table").append(rowTemplate);
-
-
+    // iterate json data from server and build new table rows for each entry
     for(var i = 0; i < data.length; i++){
         render_aqi_tables_template(data, i)
     }
