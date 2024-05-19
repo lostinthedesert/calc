@@ -88,3 +88,12 @@ def air_quality():
     del items[49:]
     return items
 
+@app.get("/tv_listings")
+def tv_listings():
+    with open("../aqi2.csv", 'r') as f:
+            reader = csv.DictReader(f)
+            items = list(reader)
+            f.close()
+    items.reverse()
+    del items[49:]
+    return items
