@@ -1,4 +1,4 @@
-function getListings(object = {"dataID": "tv-listings"}){
+function getListings(object = {"dataID": "listings"}){
     $.ajax("/tv_listings")
     
     .then(result => {
@@ -10,11 +10,32 @@ function getListings(object = {"dataID": "tv-listings"}){
 }
 
 function update_listings(data){
+   
+    $("#listing").html("");
+
     for(var i = 0; i < data.length; i++){
-        var newListing = $(".listing-template").clone();
-        newListing.removeClass("listing-template").addClass("listing");
+        var newListing = $("#listing-template").clone();
+        $("#listings").append(newListing);
+        // newListing.addClass("listings");
         newListing.attr("id", `listing${i}`);
-        $(`#listing${i}`).append(data[i]);
-        
+        if (days.includes(data[i])) {
+            $(`#listing${i}`).attr("style", "font-weight: bold;");
+            $(`#listing${i}`).addClass("day");
+        }
+        else{
+            $(`#listing${i}`).addClass("listing");
+        }
+        $(`#listing${i}`).html(data[i]);
+    
     }
 }
+
+var days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
+]

@@ -65,6 +65,15 @@ function hashReader(){
             getPost(object);
             replaceState(object);
         }
+        if(hashObject.hash == "getListings"){
+            const object = {
+                dataID: "listings",
+                href: "getListings",
+                dataClass: "listing-link"
+            }
+            getListings();
+            replaceState(object);
+        }
     }
 }
 
@@ -206,6 +215,17 @@ function runSwitchStatement(object){
             if(!object.isPop){
                 updatePushState(object);
             }
+        case "listing-link":
+            let listingLoaded = $("listing0").attr("id");
+            if(listingLoaded){
+                runDOMRoutineForListing();
+            }
+            else{
+                getListings(object);
+            }
+            if(!object.isPop){
+                updatePushState(object);
+            }
     }
 }
 
@@ -310,6 +330,9 @@ $("#calculator-form").submit(function(e){
     $("#answer").html(answer);
 })
 
-
+function runDOMRoutineForListing(){
+    $(".selected").removeClass("selected");
+    $('.listing').addClass("selected");
+}
 
 // see postSomething.js and aqiPage.js in this directory for all other switch statement endpoints

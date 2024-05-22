@@ -19,7 +19,7 @@ from typing import List
 import csv
 
 import os
-
+import json
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -90,10 +90,7 @@ def air_quality():
 
 @app.get("/tv_listings")
 def tv_listings():
-    with open("../aqi2.csv", 'r') as f:
-            reader = csv.DictReader(f)
-            items = list(reader)
-            f.close()
-    items.reverse()
-    del items[49:]
-    return items
+    with open("../html_list.txt", 'r') as f:
+        html_list = json.load(f)
+    return html_list
+    

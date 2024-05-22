@@ -16,7 +16,7 @@
     <!-- calculator page only -->
     <body>
         <header>
-            <a id="home-link" data-id="calculator" data-class="home-link" href="home">Calculator</a> | <a id="posts-link" data-id="posts" data-class="post-link" href="get_post" data-skip="0">Post Something</a> | <a id="air-quality" data-id="air-quality" data-class="air-quality-link" href="getAirQuality">Air Quality</a>
+            <a id="home-link" data-id="calculator" data-class="home-link" href="home">Calculator</a> | <a id="posts-link" data-id="posts" data-class="post-link" href="get_post" data-skip="0">Post Something</a> | <a id="air-quality" data-id="air-quality" data-class="air-quality-link" href="getAirQuality">Air Quality</a> | <a id="listing-link" data-id="listings" data-class="listing-link" href="getListings">TV Sports</a>
         </header>
         
         <div id="loader"></div>
@@ -120,18 +120,20 @@
 
             Source: airnow.gov
         </div>
+
+<!-- TV listings page -->
+        <div class="listings" id="listing-div">
+            <h2>Sporting events channel listing</h2>
+            <div id = "listing-template"></div>
+            <div id = "listings"></div>
+        </div>
+
         <script src="/static/index.js"></script>  
         <script src="/static/postSomething.js"></script>
         <script src="/static/aqiPage.js"></script> 
+        <script src="/static/listings.js"></script>
         </div>
     
-        <!-- TV listings page -->
-        <div class="tv-listings" id="tv-listings-div">
-            <h2>Sporting events channel listing</h2>
-            <div id = "listings">
-                <div class = "listing-template" id = "listing"></div>
-            </div>
-        </div>
     </body>
 
     
