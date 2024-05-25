@@ -170,9 +170,16 @@ th, td{
 }
 
 .listing{
-    padding: .15%;
+    
 }
 
 .day{
     padding-top: 1%;
+    font-size: 1.30rem;
+    font-weight: bold
+}
+
+.title{
+    padding-top: 1%;
+    font-weight: bold
 }

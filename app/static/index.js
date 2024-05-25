@@ -332,7 +332,7 @@ $("#calculator-form").submit(function(e){
 
 function runDOMRoutineForListing(){
     $(".selected").removeClass("selected");
-    $('.listing').addClass("selected");
+    $('.listings').addClass("selected");
 }
 
 // see postSomething.js and aqiPage.js in this directory for all other switch statement endpoints

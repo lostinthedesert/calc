@@ -19,8 +19,10 @@ function update_listings(data){
         // newListing.addClass("listings");
         newListing.attr("id", `listing${i}`);
         if (days.includes(data[i])) {
-            $(`#listing${i}`).attr("style", "font-weight: bold;");
             $(`#listing${i}`).addClass("day");
+        }
+        else if (!data[i].includes(',')){
+            $(`#listing${i}`).addClass("title");
         }
         else{
             $(`#listing${i}`).addClass("listing");
