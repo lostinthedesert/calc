@@ -19,5 +19,6 @@ try:
         myfile.close()
     
     print("TV listings updated successfully")
-except:
-    print("There was an error gathering TV listings")
+
+except Exception as e:
+    print(f"There was an error gathering TV listings: {e}")

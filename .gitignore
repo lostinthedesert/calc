@@ -2,6 +2,8 @@ notation/
 .env
 /app/routers/
 venv/ 
+html_list.txt
+aqi2.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
