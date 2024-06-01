@@ -18,7 +18,7 @@ def send_request(zip_code):
     ozone_category = json_response[0]['Category']['Name']
 
     with open("../aqi2.csv", "a") as f:
-        f.write(f"\n{date},{time},{city},{state},{aqi},{category}, {ozone}, {ozone_category}")
+        f.write(f"\n{date},{time},{city},{state},{aqi},{category},{ozone},{ozone_category}")
         f.close()
 
 send_request(85013)
