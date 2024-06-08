@@ -3,16 +3,14 @@ import json
 import logging
 from time import sleep
 
-from .config import settings
-
-logging.basicConfig(filename='../annex_log.txt', level=logging.DEBUG, 
+logging.basicConfig(filename='/home/cnickm/app/annex_log.log', level=logging.DEBUG, 
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
 def send_request(zip_code, retries=3, delay=10):
     for attempt in range(retries):
         try:
             zip_code = str(zip_code)
-            api_request = requests.get("https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode="+zip_code+"&distance=5&API_KEY="+settings.api_key)
+            api_request = requests.get("https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode="+zip_code+"&distance=5&API_KEY=D8C5EFCD-6CD6-454A-A622-829877E67B9B")
             
             api_request.raise_for_status()
             content = api_request.content.decode('utf-8')
