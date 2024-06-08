@@ -3,7 +3,7 @@ import json
 import logging
 from time import sleep
 
-from config import settings
+from .config import settings
 
 logging.basicConfig(filename='../annex_log.txt', level=logging.DEBUG, 
                     format='%(asctime)s - %(levelname)s - %(message)s')
