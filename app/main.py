@@ -85,7 +85,7 @@ def air_quality():
             items = list(reader)
             f.close()
     items.reverse()
-    del items[49:]
+    del items[99:]
     return items
 
 @app.get("/tv_listings")

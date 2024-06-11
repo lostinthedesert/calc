@@ -14,14 +14,13 @@ def send_request(zip_code, retries=3, delay=10):
             
             api_request.raise_for_status()
             content = api_request.content.decode('utf-8')
+            
             logging.debug(f"Raw response content: {content}")  # Debugging statement
             if not content.strip():  # Check if the response is empty or whitespace-only
                 raise ValueError("Received empty or whitespace-only response.")
 
             json_response = json.loads(api_request.content)
-            # print(json_response)
-            logging.debug(f"Parsed JSON data: {json_response}")
-            
+                
             date = json_response[0]['DateObserved']
             time = json_response[0]['HourObserved']
             city = json_response[0]['ReportingArea']
