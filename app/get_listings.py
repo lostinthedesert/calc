@@ -17,6 +17,7 @@ def grab_listings(retries=2, delay=1800):
             source.raise_for_status()
         
             parse_html(source)
+            break
 
         except requests.exceptions.RequestException as e:
             if attempt < retries - 1:

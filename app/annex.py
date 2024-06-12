@@ -15,7 +15,7 @@ def send_request(zip_code, retries=3, delay=10):
             api_request.raise_for_status()
             content = api_request.content.decode('utf-8')
             
-            logging.debug(f"Raw response content: {content}")  # Debugging statement
+            # logging.debug(f"Raw response content: {content}")  # Debugging statement
             if not content.strip():  # Check if the response is empty or whitespace-only
                 raise ValueError("Received empty or whitespace-only response.")
 
