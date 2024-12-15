@@ -39,11 +39,6 @@ def create_post(db: Session=Depends(get_db), limit: int=10, skip: int=0):
     posts=db.query(models.Posts).filter(models.Posts.comment_id==None).order_by(models.Posts.created_at.desc()).limit(limit).offset(skip).all()
     return posts
 
-# @app.get("/get-posts")
-# def redirect_get_posts():
-#     response = RedirectResponse(url="/")
-#     return response
-
 # GET ONE POST
 @app.get("/get_single/{id}", response_model=List[schemas.ReturnPost])
 def create_post(id: int, db: Session=Depends(get_db), skip: int=0):

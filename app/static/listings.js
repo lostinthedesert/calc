@@ -24,6 +24,9 @@ function update_listings(data){
         else if (!data[i].includes(',')){
             $(`#listing${i}`).addClass("title");
         }
+        else if (teams.includes(data[i])) {
+            $(`#listing${i}`).addClass("team");
+        }
         else{
             $(`#listing${i}`).addClass("listing");
         }
@@ -40,4 +43,14 @@ var days = [
     "Thursday",
     "Friday",
     "Saturday"
+]
+
+var teams = [
+    "Arizona",
+    "Phoenix",
+    "Suns",
+    "Grand Canyon",
+    "Cardinals",
+    "Diamondbacks",
+    "NAU"
 ]
