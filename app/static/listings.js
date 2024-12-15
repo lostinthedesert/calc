@@ -24,7 +24,7 @@ function update_listings(data){
         else if (!data[i].includes(',')){
             $(`#listing${i}`).addClass("title");
         }
-        else if (teams.includes(data[i])) {
+        else if (teams.some(team => data[i].toLowerCase().includes(team.toLowerCase()))){
             $(`#listing${i}`).addClass("team");
         }
         else{
